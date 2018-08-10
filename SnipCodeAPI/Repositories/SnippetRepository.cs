@@ -1,4 +1,5 @@
 ﻿using LiteDB;
+using Microsoft.IdentityModel.Protocols;
 using SnipCodeAPI.Models;
 using SnipCodeAPI.Repositories.Interfaces;
 using System;
@@ -13,7 +14,7 @@ namespace SnipCodeAPI.Repositories
     {
         public void DeleteSnippet(int snippetId)
         {
-            using (var db = new LiteRepository(ConfigurationManager.ConnectionStrings["LiteDB"].ConnectionString))
+            using (var db = new LiteRepository("database.db"))
             {
                 db.Delete<Snippet>(snippetId);
             }
@@ -21,7 +22,7 @@ namespace SnipCodeAPI.Repositories
 
         public Snippet GetSnippetById(int snippetId)
         {
-            using (var db = new LiteRepository(ConfigurationManager.ConnectionStrings["LiteDB"].ConnectionString))
+            using (var db = new LiteRepository("database.db"))
             {
                 return db.Query<Snippet>().Include(x => x.Files)
                     .SingleById(snippetId);
@@ -30,7 +31,7 @@ namespace SnipCodeAPI.Repositories
 
         public IEnumerable<Snippet> GetSnippets()
         {
-            using (var db = new LiteRepository(ConfigurationManager.ConnectionStrings["LiteDB"].ConnectionString))
+            using (var db = new LiteRepository("database.db"))
             {
                 return db.Query<Snippet>()
                     .Include(x => x.Files)
@@ -40,7 +41,7 @@ namespace SnipCodeAPI.Repositories
 
         public void InsertSnippet(Snippet snippet)
         {
-            using (var db = new LiteRepository(ConfigurationManager.ConnectionStrings["LiteDB"].ConnectionString))
+            using (var db = new LiteRepository("database.db"))
             {
                 db.Insert(snippet);
             }
@@ -48,7 +49,7 @@ namespace SnipCodeAPI.Repositories
 
         public void UpdateSnippet(Snippet snippet)
         {
-            using (var db = new LiteRepository(ConfigurationManager.ConnectionStrings["LiteDB"].ConnectionString))
+            using (var db = new LiteRepository("database.db"))
             {
                 db.Update(snippet);
             }

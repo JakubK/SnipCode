@@ -1,4 +1,5 @@
 ﻿using LiteDB;
+using Microsoft.IdentityModel.Protocols;
 using SnipCodeAPI.Models;
 using SnipCodeAPI.Repositories.Interfaces;
 using System;
@@ -13,7 +14,7 @@ namespace SnipCodeAPI.Repositories
     {
         public void DeleteSnippetFile(int snippetFileId)
         {
-            using (var db = new LiteRepository(ConfigurationManager.ConnectionStrings["LiteDB"].ConnectionString))
+            using (var db = new LiteRepository("database.db"))
             {
                 db.Delete<SnippetFile>(snippetFileId);
             }
@@ -21,7 +22,7 @@ namespace SnipCodeAPI.Repositories
 
         public SnippetFile GetSnippetFileById(int snippetFileId)
         {
-            using (var db = new LiteRepository(ConfigurationManager.ConnectionStrings["LiteDB"].ConnectionString))
+            using (var db = new LiteRepository("database.db"))
             {
                 return db.Query<SnippetFile>().SingleById(snippetFileId);
             }
@@ -29,7 +30,7 @@ namespace SnipCodeAPI.Repositories
 
         public IEnumerable<SnippetFile> GetSnippetFiles()
         {
-            using (var db = new LiteRepository(ConfigurationManager.ConnectionStrings["LiteDB"].ConnectionString))
+            using (var db = new LiteRepository("database.db"))
             {
                 return db.Query<SnippetFile>().ToList();
             }
@@ -37,7 +38,7 @@ namespace SnipCodeAPI.Repositories
 
         public void InsertSnippetFile(SnippetFile snippetFile)
         {
-            using (var db = new LiteRepository(ConfigurationManager.ConnectionStrings["LiteDB"].ConnectionString))
+            using (var db = new LiteRepository("database.db"))
             {
                 db.Insert(snippetFile);
             }
@@ -45,7 +46,7 @@ namespace SnipCodeAPI.Repositories
 
         public void UpdateSnippetFile(SnippetFile snippetFile)
         {
-            using (var db = new LiteRepository(ConfigurationManager.ConnectionStrings["LiteDB"].ConnectionString))
+            using (var db = new LiteRepository("database.db"))
             {
                 db.Update(snippetFile);
             }
