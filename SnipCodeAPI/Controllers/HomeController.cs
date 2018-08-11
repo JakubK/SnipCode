@@ -1,27 +1,33 @@
 using Microsoft.AspNetCore.Mvc;
 using SnipCodeAPI.Models;
+using SnipCodeAPI.Repositories;
 using SnipCodeAPI.Repositories.Interfaces;
 
 namespace SnipCodeAPI.Controllers
 {
   public class HomeController : Controller
   {   
-    private IRepository repository; 
-    public HomeController(IRepository repo)
+    private IUserRepository userRepository;
+    private ISnippetRepository snippetRepository; 
+    private ISnippetFileRepository snippetFileRepository; 
+
+    public HomeController(IUserRepository userRepo, ISnippetRepository snippetRepo, ISnippetFileRepository snippetFileRepo)
     {
-      this.repository = repo;
+      this.userRepository = userRepo;
+      this.snippetRepository = snippetRepo;
+      this.snippetFileRepository = snippetFileRepo;
     }
     public IActionResult Users()
     {
-      return View(repository.Database.Query<User>().ToList());
+      return View(userRepository.GetUsers());
     }
     public IActionResult Snippets()
     {
-      return View(repository.Database.Query<Snippet>().ToList());
+      return View(snippetRepository.GetSnippets());
     }
     public IActionResult SnippetFiles()
     {
-      return View(repository.Database.Query<SnippetFile>().ToList());
+      return View(snippetFileRepository.GetSnippetFiles());
     }
   }
 }

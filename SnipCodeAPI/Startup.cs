@@ -20,6 +20,10 @@ namespace SnipCodeAPI
             services.AddMvc();
 
             services.AddSingleton<IRepository>(repository => new Repository("database.db"));
+
+            services.AddSingleton<IUserRepository,UserRepository>();
+            services.AddSingleton<ISnippetRepository,SnippetRepository>();
+            services.AddSingleton<ISnippetFileRepository,SnippetFileRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
