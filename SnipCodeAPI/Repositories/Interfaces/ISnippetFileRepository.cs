@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SnipCodeAPI.Repositories.Interfaces
 {
-    interface ISnippetFileRepository
+    public interface ISnippetFileRepository
     {
         IEnumerable<SnippetFile> GetSnippetFiles();
         SnippetFile GetSnippetFileById(int snippetFileId);

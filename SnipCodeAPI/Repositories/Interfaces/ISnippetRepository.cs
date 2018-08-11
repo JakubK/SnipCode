@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace SnipCodeAPI.Repositories.Interfaces
 {
-    interface ISnippetRepository
+    public interface ISnippetRepository
     {
         IEnumerable<Snippet> GetSnippets();
+
         Snippet GetSnippetById(int snippetId);
         void InsertSnippet(Snippet snippet);
         void DeleteSnippet(int snippetId);
