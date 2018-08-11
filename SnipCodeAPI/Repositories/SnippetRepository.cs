@@ -10,49 +10,38 @@ using System.Threading.Tasks;
 
 namespace SnipCodeAPI.Repositories
 {
-    public class SnippetRepository : ISnippetRepository
+  public class SnippetRepository : ISnippetRepository
+  {
+    private IRepository repository;
+    public SnippetRepository(IRepository repoParam)
     {
-        public void DeleteSnippet(int snippetId)
-        {
-            using (var db = new LiteRepository("database.db"))
-            {
-                db.Delete<Snippet>(snippetId);
-            }
-        }
-
-        public Snippet GetSnippetById(int snippetId)
-        {
-            using (var db = new LiteRepository("database.db"))
-            {
-                return db.Query<Snippet>().Include(x => x.Files)
-                    .SingleById(snippetId);
-            }
-        }
-
-        public IEnumerable<Snippet> GetSnippets()
-        {
-            using (var db = new LiteRepository("database.db"))
-            {
-                return db.Query<Snippet>()
-                    .Include(x => x.Files)
-                    .ToList();
-            }
-        }
-
-        public void InsertSnippet(Snippet snippet)
-        {
-            using (var db = new LiteRepository("database.db"))
-            {
-                db.Insert(snippet);
-            }
-        }
-
-        public void UpdateSnippet(Snippet snippet)
-        {
-            using (var db = new LiteRepository("database.db"))
-            {
-                db.Update(snippet);
-            }
-        }
+      this.repository = repoParam;
     }
+    public void DeleteSnippet(int snippetId)
+    {
+      repository.Database.Delete<Snippet>(snippetId);
+    }
+
+    public Snippet GetSnippetById(int snippetId)
+    {
+      return repository.Database.Query<Snippet>().Include(x => x.Files).SingleById(snippetId);
+    }
+
+    public IEnumerable<Snippet> GetSnippets()
+    {
+      return repository.Database.Query<Snippet>()
+            .Include(x => x.Files)
+            .ToList();
+    }
+
+    public void InsertSnippet(Snippet snippet)
+    {
+      repository.Database.Insert(snippet);
+    }
+
+    public void UpdateSnippet(Snippet snippet)
+    {
+      repository.Database.Update(snippet);
+    }
+  }
 }

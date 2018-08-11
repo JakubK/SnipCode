@@ -12,44 +12,34 @@ namespace SnipCodeAPI.Repositories
 {
     public class SnippetFileRepository : ISnippetFileRepository
     {
+        private IRepository repository;
+        public SnippetFileRepository(IRepository repoParam)
+        {
+            this.repository = repoParam;
+        }
         public void DeleteSnippetFile(int snippetFileId)
         {
-            using (var db = new LiteRepository("database.db"))
-            {
-                db.Delete<SnippetFile>(snippetFileId);
-            }
+            repository.Database.Delete<SnippetFile>(snippetFileId);
         }
 
         public SnippetFile GetSnippetFileById(int snippetFileId)
         {
-            using (var db = new LiteRepository("database.db"))
-            {
-                return db.Query<SnippetFile>().SingleById(snippetFileId);
-            }
+            return repository.Database.Query<SnippetFile>().SingleById(snippetFileId);
         }
 
         public IEnumerable<SnippetFile> GetSnippetFiles()
         {
-            using (var db = new LiteRepository("database.db"))
-            {
-                return db.Query<SnippetFile>().ToList();
-            }
+            return repository.Database.Query<SnippetFile>().ToList();
         }
 
         public void InsertSnippetFile(SnippetFile snippetFile)
         {
-            using (var db = new LiteRepository("database.db"))
-            {
-                db.Insert(snippetFile);
-            }
+            repository.Database.Insert(snippetFile);
         }
 
         public void UpdateSnippetFile(SnippetFile snippetFile)
         {
-            using (var db = new LiteRepository("database.db"))
-            {
-                db.Update(snippetFile);
-            }
+            repository.Database.Update(snippetFile);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using LiteDB;
 using Microsoft.IdentityModel.Protocols;
 using SnipCodeAPI.Models;
+using SnipCodeAPI.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,41 +11,30 @@ namespace SnipCodeAPI.Repositories
 {
     public class UserRepository : IUserRepository
     {
+        private IRepository repository;
+        public UserRepository(IRepository repoParam)
+        {
+            this.repository = repoParam;
+        }
         public IEnumerable<User> GetUsers()
         {
-            using (var db = new LiteRepository("database.db"))
-            {
-                return db.Query<User>().Include(x => x.Snippets).ToList();
-            }
+            return repository.Database.Query<User>().Include(x => x.Snippets).ToList();
         }
         public User GetUserById(int userId)
         {
-            using (var db = new LiteRepository("database.db"))
-            {
-                return db.Query<User>().Include(x => x.Snippets)
-                    .SingleById(userId);
-            }
+            return repository.Database.Query<User>().Include(x => x.Snippets).SingleById(userId);
         }
         public void InsertUser(User user)
         {
-            using (var db = new LiteRepository("database.db"))
-            {
-                db.Insert(user);
-            }
+            repository.Database.Insert(user);
         }
         public void DeleteUser(int userId)
         {
-            using (var db = new LiteRepository("database.db"))
-            {
-                db.Delete<User>(userId);
-            }
+            repository.Database.Delete<User>(userId);
         }
         public void UpdateUser(User user)
         {
-            using (var db = new LiteRepository("database.db"))
-            {
-                db.Update(user);
-            }
+            repository.Database.Update(user);
         }
     }
 }
