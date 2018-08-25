@@ -21,6 +21,8 @@ namespace SnipCodeAPI
 
             services.AddSingleton<IDataGateway>(dataMapper => new LiteRepositoryDataMapper("database.db"));
             services.AddSingleton<IUserRepository, UserRepository>();
+            services.AddSingleton<ISnippetRepository, SnippetRepository>();
+            services.AddSingleton<ISnippetFileRepository, SnippetFileRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

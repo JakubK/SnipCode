@@ -6,64 +6,32 @@ using System.Linq;
 
 namespace SnipCodeAPI.Repositories
 {
-  public class LiteRepositoryDataMapper : IDataGateway
-  {
-    private LiteRepository LiteRepository;
-
-    public LiteRepositoryDataMapper(string connectionString)
+    public class LiteRepositoryDataMapper : IDataGateway
     {
-      LiteRepository = new LiteRepository(connectionString);
+        #region constructor and fields
+        private LiteRepository LiteRepository;
+        public LiteRepositoryDataMapper(string connectionString) => LiteRepository = new LiteRepository(connectionString);
+        #endregion
+        #region User
+        public List<User> GetAllUsers() => LiteRepository.Query<User>().ToList();
+        public User GetUserByID(int id) => LiteRepository.Query<User>().Where(x => x.Id == id).FirstOrDefault();
+        public void RemoveUser(int id) => LiteRepository.Delete<User>(x => x.Id == id);
+        public void InsertUser(User user) => LiteRepository.Insert<User>(user);
+        public void UpdateUser(User user) => LiteRepository.Update<User>(user);
+        #endregion
+        #region Snippet
+        public List<Snippet> GetAllSnippets() => LiteRepository.Query<Snippet>().ToList();
+        public Snippet GetSnippetById(int id) => LiteRepository.Query<Snippet>().Where(x => x.Id == id).SingleOrDefault();
+        public void RemoveSnippet(int id) => LiteRepository.Delete<Snippet>(x => x.Id == id);
+        public void InsertSnippet(Snippet snippet) => LiteRepository.Insert<Snippet>(snippet);
+        public void UpdateSnippet(Snippet snippet) => LiteRepository.Update<Snippet>(snippet);
+        #endregion
+        #region SnippetFiles
+        public List<SnippetFile> GetAllSnippetFiles() => LiteRepository.Query<SnippetFile>().ToList();
+        public SnippetFile GetSnippetFileById(int id) => LiteRepository.Query<SnippetFile>().Where(x => x.Id == id).SingleOrDefault();
+        public void RemoveSnippetFile(int id) => LiteRepository.Delete<SnippetFile>(x => x.Id == id);
+        public void InsertSnippetFile(SnippetFile snippetFile) => LiteRepository.Insert<SnippetFile>(snippetFile);
+        public void UpdateSnippetFile(SnippetFile snippetFile) => LiteRepository.Update<SnippetFile>(snippetFile);
+        #endregion
     }
-
-    public List<User> GetAllUsers()
-    {
-      return LiteRepository.Query<User>().ToList();
-    }
-
-    public User GetUserByID(int id)
-    {
-      return LiteRepository.Query<User>().Where(x => x.Id == id).FirstOrDefault();
-    }
-
-    public void RemoveUser(int id)
-    {
-      LiteRepository.Delete<User>(x => x.Id == id);
-    }
-
-    public void InsertUser(User user)
-    {
-      LiteRepository.Insert<User>(user);
-    }
-
-    public void UpdateUser(User user)
-    {
-      LiteRepository.Update<User>(user);
-    }
-
-    public List<Snippet> Snippets
-    {
-      get
-      {
-        return LiteRepository.Query<Snippet>().ToList();
-      }
-      set
-      {
-        LiteRepository.Update(value);
-      }
-    } 
-
-    public List<SnippetFile> SnippetFiles
-    {
-      get
-      {
-        return LiteRepository.Query<SnippetFile>().ToList();
-      }
-      set
-      {
-        LiteRepository.Update(value);
-      }
-    }
-
-
-  }
 }
