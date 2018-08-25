@@ -11,7 +11,7 @@ namespace SnipCodeAPI.Repositories.Interfaces
         IEnumerable<User> GetUsers();
         User GetUserById(int userId);
         void InsertUser(User user);
-        void DeleteUser(int userId);
+        void DeleteUser(int id);
         void UpdateUser(User user);
     }
 }

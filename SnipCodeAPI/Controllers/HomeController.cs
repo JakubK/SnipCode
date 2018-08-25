@@ -7,20 +7,28 @@ namespace SnipCodeAPI.Controllers
 {
   public class HomeController : Controller
   {   
-    private IUserRepository userRepository;
     private ISnippetRepository snippetRepository; 
     private ISnippetFileRepository snippetFileRepository; 
 
-    public HomeController(IUserRepository userRepo, ISnippetRepository snippetRepo, ISnippetFileRepository snippetFileRepo)
+    private IUserRepository UserRepository;
+
+    public HomeController(IUserRepository userRepository)
     {
-      this.userRepository = userRepo;
-      this.snippetRepository = snippetRepo;
-      this.snippetFileRepository = snippetFileRepo;
+      this.UserRepository = userRepository;
+
     }
     public IActionResult Users()
     {
-      return View(userRepository.GetUsers());
+      return View(UserRepository.GetUsers());
     }
+
+    public IActionResult DeleteUser()
+    {
+      UserRepository.DeleteUser(1);
+      System.Diagnostics.Debug.WriteLine("DELETION COMPLETE");
+      return Redirect("Users");
+    }
+
     public IActionResult Snippets()
     {
       return View(snippetRepository.GetSnippets());
