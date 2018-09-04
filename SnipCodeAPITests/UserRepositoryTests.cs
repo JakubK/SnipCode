@@ -12,14 +12,14 @@ namespace SnipCodeAPITests
     public class UserRepositoryTests
     {
       [Test]
-      public void GetUsers_WhenNoUsers_ReturnsNull()
+      public void GetUsers_WhenNoUsers_ReturnsEmptyCollection()
       {
         IDataGateway gateway = Substitute.For<IDataGateway>();
 
         UserRepository repository = new UserRepository(gateway);
         var users = repository.GetUsers();
 
-        Assert.AreEqual(null,users);
+        Assert.AreEqual(new List<User>(),users);
       }
 
       [Test]
