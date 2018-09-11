@@ -64,19 +64,16 @@ namespace SnipCodeAPITests
         #region Update
 
         [Test]
-        public void UpdateUser_WhenUserAreAvailable_ReturnsTrue()
+        public void UpdateUser_WhenUsersAreAvailable_ReturnsTrue()
         {
             IDataGateway gateway = Substitute.For<IDataGateway>();
-            gateway.GetAllUsers().Returns(new List<User>{
-            new User()
-          });
             gateway.UpdateUser(Arg.Any<User>()).Returns(true);
             var repository = new UserRepository(gateway);
             Assert.IsTrue(repository.UpdateUser(new User()));
         }
 
         [Test]
-        public void UpdateUser_WhenUserAreNotAvailable_ReturnsFalse()
+        public void UpdateUser_WhenUsersAreNotAvailable_ReturnsFalse()
         {
             IDataGateway gateway = Substitute.For<IDataGateway>();
             gateway.UpdateUser(Arg.Any<User>()).Returns(false);
@@ -92,11 +89,6 @@ namespace SnipCodeAPITests
         public void DeleteUser_WhenUserExists_ShouldDeleteUser()
         {
             IDataGateway gateway = Substitute.For<IDataGateway>();
-            gateway.GetAllUsers().Returns(new List<User>
-            {
-                new User(){Id = 1},
-                new User(){Id = 2}
-            });
             var repository = new UserRepository(gateway);
             repository.DeleteUser(2);
             gateway.Received().RemoveUser(Arg.Any<int>());
