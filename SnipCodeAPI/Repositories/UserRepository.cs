@@ -14,6 +14,6 @@ namespace SnipCodeAPI.Repositories
     public User GetUserById(int userId) => DataGateway.GetUserByID(userId);
     public IEnumerable<User> GetUsers() => DataGateway.GetAllUsers();
     public void InsertUser(User user) => DataGateway.InsertUser(user);
-    public void UpdateUser(User user) => DataGateway.UpdateUser(user);
+    public bool UpdateUser(User user) => DataGateway.UpdateUser(user);
   }
 }

@@ -12,6 +12,6 @@ namespace SnipCodeAPI.Repositories.Interfaces
         SnippetFile GetSnippetFileById(int snippetFileId);
         void InsertSnippetFile(SnippetFile snippetFile);
         void DeleteSnippetFile(int snippetFileId);
-        void UpdateSnippetFile(SnippetFile snippetFile);
+        bool UpdateSnippetFile(SnippetFile snippetFile);
     }
 }

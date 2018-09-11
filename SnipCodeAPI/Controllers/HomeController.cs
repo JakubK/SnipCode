@@ -3,6 +3,7 @@ using SnipCodeAPI.Models;
 using SnipCodeAPI.Repositories;
 using SnipCodeAPI.Repositories.Interfaces;
 using System;
+using System.Linq;
 
 namespace SnipCodeAPI.Controllers
 {
@@ -79,6 +80,7 @@ namespace SnipCodeAPI.Controllers
                 Email = "test@test.test",
                 CreationTime = DateTime.Now
             };
+            if(UserRepository.GetUsers().Where(u=>u.Email.Equals(user.Email))!=null)
             UserRepository.InsertUser(user);
             return Redirect("Users");
         }

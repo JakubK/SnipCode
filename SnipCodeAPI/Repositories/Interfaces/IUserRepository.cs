@@ -12,6 +12,6 @@ namespace SnipCodeAPI.Repositories.Interfaces
         User GetUserById(int userId);
         void InsertUser(User user);
         void DeleteUser(int id);
-        void UpdateUser(User user);
+        bool UpdateUser(User user);
     }
 }

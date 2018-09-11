@@ -16,6 +16,6 @@ namespace SnipCodeAPI.Repositories
         public SnippetFile GetSnippetFileById(int snippetFileId) => DataGateway.GetSnippetFileById(snippetFileId);
         public IEnumerable<SnippetFile> GetSnippetFiles() => DataGateway.GetAllSnippetFiles();
         public void InsertSnippetFile(SnippetFile snippetFile) => DataGateway.InsertSnippetFile(snippetFile);
-        public void UpdateSnippetFile(SnippetFile snippetFile) => DataGateway.UpdateSnippetFile(snippetFile);
+        public bool UpdateSnippetFile(SnippetFile snippetFile) => DataGateway.UpdateSnippetFile(snippetFile);
     }
 }
