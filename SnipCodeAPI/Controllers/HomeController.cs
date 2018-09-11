@@ -29,7 +29,27 @@ namespace SnipCodeAPI.Controllers
         {
             UserRepository.DeleteUser(id);
             System.Diagnostics.Debug.WriteLine("DELETION COMPLETE");
-            return Redirect("Users");
+            return RedirectToAction("Users");
+        }
+
+        public IActionResult AddUser()
+        {
+            UserRepository.InsertUser(new User{
+                Email = "fake"
+            });
+
+            return RedirectToAction("Users");
+        }
+
+        public IActionResult EditUser()
+        {
+            UserRepository.UpdateUser(
+                new User{
+                  Id = UserRepository.GetUsers().FirstOrDefault().Id,
+                  Email = "Faky"
+                });
+
+            return RedirectToAction("Users");            
         }
 
         public IActionResult Snippets()
