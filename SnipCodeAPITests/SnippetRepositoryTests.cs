@@ -64,12 +64,9 @@ namespace SnipCodeAPITests
         #region Update
 
         [Test]
-        public void UpdateSnippet_WhenSnippetAreAvailable_ReturnsTrue()
+        public void UpdateSnippet_WhenSnippetsAreAvailable_ReturnsTrue()
         {
             IDataGateway gateway = Substitute.For<IDataGateway>();
-            gateway.GetAllSnippets().Returns(new List<Snippet>{
-            new Snippet()
-          });
             gateway.UpdateSnippet(Arg.Any<Snippet>()).Returns(true);
             var repository = new SnippetRepository(gateway);
             Assert.IsTrue(repository.UpdateSnippet(new Snippet()));
@@ -92,11 +89,7 @@ namespace SnipCodeAPITests
         public void DeleteSnippet_WhenSnippetExists_ShouldDeleteSnippet()
         {
             IDataGateway gateway = Substitute.For<IDataGateway>();
-            gateway.GetAllSnippets().Returns(new List<Snippet>
-            {
-                new Snippet(){Id = 1},
-                new Snippet(){Id = 2}
-            });
+
             var repository = new SnippetRepository(gateway);
             repository.DeleteSnippet(2);
             gateway.Received().RemoveSnippet(Arg.Any<int>());

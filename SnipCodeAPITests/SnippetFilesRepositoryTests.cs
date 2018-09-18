@@ -64,19 +64,17 @@ namespace SnipCodeAPITests
         #region Update
 
         [Test]
-        public void UpdateSnippetFile_WhenSnippetFileAreAvailable_ReturnsTrue()
+        public void UpdateSnippetFile_WhenSnippetFilesAreAvailable_ReturnsTrue()
         {
             IDataGateway gateway = Substitute.For<IDataGateway>();
-            gateway.GetAllSnippetFiles().Returns(new List<SnippetFile>{
-            new SnippetFile()
-          });
+
             gateway.UpdateSnippetFile(Arg.Any<SnippetFile>()).Returns(true);
             var repository = new SnippetFileRepository(gateway);
             Assert.IsTrue(repository.UpdateSnippetFile(new SnippetFile()));
         }
 
         [Test]
-        public void UpdateSnippetFile_WhenSnippetFileAreNotAvailable_ReturnsFalse()
+        public void UpdateSnippetFile_WhenSnippetFilesAreNotAvailable_ReturnsFalse()
         {
             IDataGateway gateway = Substitute.For<IDataGateway>();
             gateway.UpdateSnippetFile(Arg.Any<SnippetFile>()).Returns(false);
@@ -92,11 +90,7 @@ namespace SnipCodeAPITests
         public void DeleteSnippetFile_WhenSnippetFileExists_ShouldDeleteSnippetFile()
         {
             IDataGateway gateway = Substitute.For<IDataGateway>();
-            gateway.GetAllSnippetFiles().Returns(new List<SnippetFile>
-            {
-                new SnippetFile(){Id = 1},
-                new SnippetFile(){Id = 2}
-            });
+
             var repository = new SnippetFileRepository(gateway);
             repository.DeleteSnippetFile(1);
             gateway.Received().RemoveSnippetFile(Arg.Any<int>());
