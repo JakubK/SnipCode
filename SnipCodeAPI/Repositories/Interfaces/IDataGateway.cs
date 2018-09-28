@@ -1,12 +1,12 @@
-using System.Collections.Generic;
 using SnipCodeAPI.Models;
+using System.Collections.Generic;
 
 namespace SnipCodeAPI.Repositories.Interfaces
 {
     public interface IDataGateway
     {
         List<User> GetAllUsers();
-        User GetUserByID(int id);
+        User GetUserById(int id);
         void RemoveUser(int id);
         void InsertUser(User user);
         bool UpdateUser(User user);

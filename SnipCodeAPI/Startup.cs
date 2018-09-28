@@ -1,40 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AspNetCore.Identity.LiteDB;
+﻿using AspNetCore.Identity.LiteDB;
 using AspNetCore.Identity.LiteDB.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using SnipCodeAPI.Models;
 using SnipCodeAPI.Repositories;
 using SnipCodeAPI.Repositories.Interfaces;
+using SnipCodeAPI.Services;
+using SnipCodeAPI.Services.Interfaces;
+using Swashbuckle.AspNetCore.Swagger;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace SnipCodeAPI
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        public Startup(IConfiguration configuration) => Configuration = configuration;
 
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IDataGateway>(dataMapper => new LiteRepositoryDataMapper("database.db"));
+            services.AddTransient<IDateTime, SystemDateTime>();
+
+            services.AddSingleton<IDataGateway>(dataMapper => new LiteRepositoryDataMapper(Configuration.GetConnectionString("DefaultConnection")));
             services.AddSingleton<IUserRepository, UserRepository>();
             services.AddSingleton<ISnippetRepository, SnippetRepository>();
             services.AddSingleton<ISnippetFileRepository, SnippetFileRepository>();
+            services.AddSingleton<ISnippetService, SnippetService>();
 
             services.AddSingleton<LiteDbContext>();
             services.AddIdentity<User,AspNetCore.Identity.LiteDB.IdentityRole>(options =>
@@ -49,6 +48,18 @@ namespace SnipCodeAPI
               .AddDefaultTokenProviders();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info
+                {
+                    Title = "SnipCode API",
+                    Version = "v1"
+                });
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,11 +77,13 @@ namespace SnipCodeAPI
             app.UseStaticFiles();
             app.UseAuthentication();
 
-            app.UseMvc(routes =>
+            app.UseMvc();
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Users}/{id?}");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "SnipCode API V1");
+                c.RoutePrefix = string.Empty;
             });
         }
     }
