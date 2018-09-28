@@ -28,7 +28,6 @@ namespace SnipCodeAPI.Controllers
         public IActionResult DeleteUser(int id)
         {
             UserRepository.DeleteUser(id);
-            System.Diagnostics.Debug.WriteLine("DELETION COMPLETE");
             return RedirectToAction("Users");
         }
 

@@ -14,8 +14,8 @@ namespace SnipCodeAPI.Repositories
         #endregion
         #region User
         public List<User> GetAllUsers() => LiteRepository.Query<User>().ToList();
-        public User GetUserByID(int id) => LiteRepository.Query<User>().Where(x => x.Id == id).FirstOrDefault();
-        public void RemoveUser(int id) => LiteRepository.Delete<User>(x => x.Id == id);
+        public User GetUserByID(int id) => LiteRepository.Query<User>().Where(x => x.ID == id).FirstOrDefault();
+        public void RemoveUser(int id) => LiteRepository.Delete<User>(x => x.ID == id);
         public void InsertUser(User user) => LiteRepository.Insert<User>(user);
         public bool UpdateUser(User user) => LiteRepository.Update<User>(user);
         #endregion
