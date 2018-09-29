@@ -6,7 +6,7 @@ namespace SnipCodeAPI.Repositories.Interfaces
     public interface ISnippetRepository
     {
         IEnumerable<Snippet> GetSnippets();
-        Snippet GetSnippetById(int snippetId);
+        Snippet GetSnippetByHash(string hash);
         void InsertSnippet(Snippet snippet);
         void DeleteSnippet(int snippetId);
         bool UpdateSnippet(Snippet snippet);

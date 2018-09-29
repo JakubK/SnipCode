@@ -12,7 +12,7 @@ namespace SnipCodeAPI.Repositories.Interfaces
         bool UpdateUser(User user);
 
         List<Snippet> GetAllSnippets();
-        Snippet GetSnippetById(int id);
+        Snippet GetSnippetByHash(string hash);
         void RemoveSnippet(int id);
         void InsertSnippet(Snippet snippet);
         bool UpdateSnippet(Snippet snippet);

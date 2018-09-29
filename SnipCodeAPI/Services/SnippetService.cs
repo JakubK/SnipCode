@@ -36,23 +36,23 @@ namespace SnipCodeAPI.Services
 
         public List<Snippet> GetSnippets() => _snippetRepository.GetSnippets().ToList();
 
-        public Snippet GetSnippetById(int id, out Snippet snippet) => snippet = _snippetRepository.GetSnippetById(id);
+        public Snippet GetSnippetByHash(string hash, out Snippet snippet) => snippet = _snippetRepository.GetSnippetByHash(hash);
 
-        public bool DeleteSnippet(int id)
+        public bool DeleteSnippet(string hash)
         {
-            var snippet = _snippetRepository.GetSnippetById(id);
+            var snippet = _snippetRepository.GetSnippetByHash(hash);
             if (snippet == null)
                 return false;
             foreach (var file in snippet.Files)
             {
                 _snippetFileRepository.DeleteSnippetFile(file.Id);
             }
-            _snippetRepository.DeleteSnippet(id);
+            _snippetRepository.DeleteSnippet(snippet.Id);
             return true;
         }
 
-        public bool UpdateSnippet(int id, Snippet snippet) =>
-            _snippetRepository.GetSnippetById(id) != null && _snippetRepository.UpdateSnippet(snippet);
+        public bool UpdateSnippet(string hash, Snippet snippet) =>
+            _snippetRepository.GetSnippetByHash(hash) != null && _snippetRepository.UpdateSnippet(snippet);
 
         private static string GenerateHash(string text)
         {

@@ -2,6 +2,9 @@
 using SnipCodeAPI.Models;
 using SnipCodeAPI.Services.Interfaces;
 using System.Collections.Generic;
+using System.Net;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace SnipCodeAPI.Controllers.API
 {
@@ -22,7 +25,7 @@ namespace SnipCodeAPI.Controllers.API
         [HttpGet, ActionName("GetSnippets")]
         [ProducesResponseType(200)]
         [ProducesResponseType(204)]
-        public ActionResult<List<Snippet>> GetAll()
+        public ActionResult<List<Snippet>> GetAllSnippets()
         {
             var snippets = _snippetService.GetSnippets();
             if (snippets.Count == 0)
@@ -33,16 +36,16 @@ namespace SnipCodeAPI.Controllers.API
         /// <summary>
         /// Get a specified Snippet
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="hash"></param>
         /// <response code="200">Return specified Snippet</response>
-        /// <response code="404">If snippet doesn't exist</response>
+        /// <response code="404">If snippet doesn't exist with specified hash</response>
         [HttpGet("{id}", Name = "GetSnippet")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public ActionResult<Snippet> GetSnippet(int id)
+        public ActionResult<Snippet> GetSnippet(string hash)
         {
-            if (_snippetService.GetSnippetById(id, out var snippet) == null)
-                return NotFound();
+            if (_snippetService.GetSnippetByHash(hash, out var snippet) == null)
+                return NotFound(hash);
 
             return snippet;
         }
@@ -51,48 +54,56 @@ namespace SnipCodeAPI.Controllers.API
         /// Create new snippet with provided snippetFiles content
         /// </summary>
         /// <param name="snippet"></param>
-        /// <response code="201">Return the newly created snippet</response>
-        /// <response code="400">If the snippet is null</response>
+        /// <response code="201">Return the url to newly Snippet</response>
+        /// <response code="400">If model doesn't contain required fields</response>
         [HttpPost(Name = "CreateSnippet")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
-        public ActionResult<Snippet> Create(Snippet snippet)
+        public ActionResult CreateSnippet(Snippet snippet)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
             _snippetService.Create(snippet);
-            return CreatedAtRoute("GetSnippet", new { id = snippet.Id }, snippet);
+            return new JsonResult(new {status = HttpStatusCode.Created, url = GenerateUrl(Request, snippet.Hash)});
         }
 
         /// <summary>
         /// Update specific Snippet
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="hash"></param>
         /// <param name="snippet"></param>
         /// <response code="200">Return updated snippet</response>
-        /// <response code="404">Snippet not found in collection</response>
+        /// <response code="404">Snippet not found in collection with specified hash code</response>
         [HttpPut("{id}", Name = "UpdateSnippet")]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
-        public ActionResult<Snippet> Update(int id, Snippet snippet)
+        public ActionResult<Snippet> UpdateSnippet(string hash, Snippet snippet)
         {
-            if (!_snippetService.UpdateSnippet(id, snippet))
-                return NotFound();
+            if (!_snippetService.UpdateSnippet(hash, snippet))
+                return NotFound(hash);
             return Ok(snippet);
         }
 
         /// <summary>
         /// Delete a specific Snippet
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="hash"></param>
         /// <response code="204">Snippet has been removed</response>
-        /// <response code="404">Snippet not found in collection</response>
+        /// <response code="404">Snippet not found in collection with specified hash code</response>
         [HttpDelete("{id}", Name = "DeleteSnippet")]
         [ProducesResponseType(404)]
         [ProducesResponseType(204)]
-        public IActionResult Delete(int id)
+        public IActionResult DeleteSnippet(string hash)
         {
-            if (!_snippetService.DeleteSnippet(id))
-                return NotFound();
+            if (!_snippetService.DeleteSnippet(hash))
+                return NotFound(hash);
             return NoContent();
+        }
+
+
+        private static string GenerateUrl(HttpRequest request, string hash)
+        {
+            return $"{request.Host}{request.Path.ToUriComponent()}?hash={hash}";
         }
     }
 }

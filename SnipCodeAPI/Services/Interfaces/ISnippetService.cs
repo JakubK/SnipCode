@@ -7,8 +7,8 @@ namespace SnipCodeAPI.Services.Interfaces
     {
         void Create(Snippet snippet);
         List<Snippet> GetSnippets();
-        Snippet GetSnippetById(int id, out Snippet snippet);
-        bool DeleteSnippet(int id);
-        bool UpdateSnippet(int id, Snippet snippet);
+        Snippet GetSnippetByHash(string hash, out Snippet snippet);
+        bool DeleteSnippet(string hash);
+        bool UpdateSnippet(string hash, Snippet snippet);
     }
 }
