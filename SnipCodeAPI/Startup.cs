@@ -37,6 +37,7 @@ namespace SnipCodeAPI
 
             services.AddSingleton<LiteDbContext>();
             services.AddIdentity<User,AspNetCore.Identity.LiteDB.IdentityRole>(options =>
+            services.AddTransient<ISeedService, SeedService>();
             {
                 options.Password.RequireDigit = false;
                 options.Password.RequireUppercase = false;
