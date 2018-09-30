@@ -22,7 +22,7 @@ namespace SnipCodeAPI.Controllers.API
         /// </summary>
         /// <response code="200">Return list of Snippets</response>
         /// <response code="204">If list is empty</response>
-        [HttpGet, ActionName("GetSnippets")]
+        [HttpGet(Name = "GetSnippets")]
         [ProducesResponseType(200)]
         [ProducesResponseType(204)]
         public ActionResult<List<Snippet>> GetAllSnippets()
@@ -39,7 +39,7 @@ namespace SnipCodeAPI.Controllers.API
         /// <param name="hash"></param>
         /// <response code="200">Return specified Snippet</response>
         /// <response code="404">If snippet doesn't exist with specified hash</response>
-        [HttpGet("{id}", Name = "GetSnippet")]
+        [HttpGet("{hash}", Name = "GetSnippet")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public ActionResult<Snippet> GetSnippet(string hash)
@@ -74,7 +74,7 @@ namespace SnipCodeAPI.Controllers.API
         /// <param name="snippet"></param>
         /// <response code="200">Return updated snippet</response>
         /// <response code="404">Snippet not found in collection with specified hash code</response>
-        [HttpPut("{id}", Name = "UpdateSnippet")]
+        [HttpPut("{hash}", Name = "UpdateSnippet")]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
         public ActionResult<Snippet> UpdateSnippet(string hash, Snippet snippet)
@@ -90,7 +90,7 @@ namespace SnipCodeAPI.Controllers.API
         /// <param name="hash"></param>
         /// <response code="204">Snippet has been removed</response>
         /// <response code="404">Snippet not found in collection with specified hash code</response>
-        [HttpDelete("{id}", Name = "DeleteSnippet")]
+        [HttpDelete("{hash}", Name = "DeleteSnippet")]
         [ProducesResponseType(404)]
         [ProducesResponseType(204)]
         public IActionResult DeleteSnippet(string hash)
@@ -103,7 +103,7 @@ namespace SnipCodeAPI.Controllers.API
 
         private static string GenerateUrl(HttpRequest request, string hash)
         {
-            return $"{request.Host}{request.Path.ToUriComponent()}?hash={hash}";
+            return $"{request.Host}{request.Path.ToUriComponent()}/{hash}";
         }
     }
 }
