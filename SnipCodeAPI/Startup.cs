@@ -1,5 +1,4 @@
-﻿using AspNetCore.Identity.LiteDB;
-using AspNetCore.Identity.LiteDB.Data;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -15,6 +14,8 @@ using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IO;
 using System.Reflection;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace SnipCodeAPI
 {
@@ -36,18 +37,20 @@ namespace SnipCodeAPI
             services.AddSingleton<ISnippetService, SnippetService>();
             services.AddSingleton<IAuthService, AuthService>();
 
-            services.AddSingleton<LiteDbContext>();
-            services.AddIdentity<User,AspNetCore.Identity.LiteDB.IdentityRole>(options =>
             services.AddTransient<ISeedService, SeedService>();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
-                options.Password.RequireDigit = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequireLowercase = false;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequiredLength = 6;
-            }).AddUserStore<LiteDbUserStore<User>>()
-              .AddRoleStore<LiteDbRoleStore<AspNetCore.Identity.LiteDB.IdentityRole>>()
-              .AddDefaultTokenProviders();
+               options.TokenValidationParameters = new TokenValidationParameters
+               {
+                   ValidateIssuer = true,
+                   ValidateAudience = true,
+                   ValidateIssuerSigningKey = true,
+                   ValidIssuer = "mysite.com",
+                   ValidAudience = "mysite.com",
+                   IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("asdasdadgreadsacsddscdscds"))
+               }; 
+            });            
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
