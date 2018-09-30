@@ -34,6 +34,7 @@ namespace SnipCodeAPI
             services.AddSingleton<ISnippetRepository, SnippetRepository>();
             services.AddSingleton<ISnippetFileRepository, SnippetFileRepository>();
             services.AddSingleton<ISnippetService, SnippetService>();
+            services.AddSingleton<IAuthService, AuthService>();
 
             services.AddSingleton<LiteDbContext>();
             services.AddIdentity<User,AspNetCore.Identity.LiteDB.IdentityRole>(options =>
