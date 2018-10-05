@@ -51,7 +51,7 @@ namespace SnipCodeAPI.Controllers.API
                 return BadRequest("Bad Credentials");
             }
 
-            var claims = new [] { new Claim(ClaimTypes.Name, usernameAndPass[0])};
+            var claims = new [] { new Claim(ClaimTypes.Email, usernameAndPass[0])};
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("asdasdadgreadsacsddscdscds"));
             var signInCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
@@ -63,9 +63,9 @@ namespace SnipCodeAPI.Controllers.API
              signingCredentials: signInCredentials);
 
             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+            user.Token = tokenString;
 
-            return Ok(tokenString);
+            return Ok(user);
         }
-
     }
 }

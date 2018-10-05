@@ -1,6 +1,7 @@
 using SnipCodeAPI.Models;
 using SnipCodeAPI.Repositories.Interfaces;
 using SnipCodeAPI.Services.Interfaces;
+using System.Linq;
 
 namespace SnipCodeAPI.Services
 {
@@ -14,14 +15,7 @@ namespace SnipCodeAPI.Services
     }
     public User Authenticate(LoginViewModel login)
     {
-      foreach(var user in userRepository.GetUsers())
-      {
-        if(user.Email == login.Email && user.Password == login.Password)
-        {
-          return user;
-        }
-      }
-      return null;
+      return userRepository.GetUsers().FirstOrDefault(x => x.Email == login.Email && x.Password == login.Password);
     }
   }
 }
