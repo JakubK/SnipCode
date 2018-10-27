@@ -36,6 +36,8 @@ namespace SnipCodeAPI
             services.AddSingleton<ISnippetFileRepository, SnippetFileRepository>();
             services.AddSingleton<ISnippetService, SnippetService>();
             services.AddSingleton<IAuthService, AuthService>();
+            services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
+            services.AddSingleton<IJWTService, JWTService>();
 
             services.AddTransient<ISeedService, SeedService>();
 
@@ -43,6 +45,7 @@ namespace SnipCodeAPI
             {
                options.TokenValidationParameters = new TokenValidationParameters
                {
+                   ClockSkew = TimeSpan.Zero,
                    ValidateIssuer = true,
                    ValidateAudience = true,
                    ValidateIssuerSigningKey = true,
