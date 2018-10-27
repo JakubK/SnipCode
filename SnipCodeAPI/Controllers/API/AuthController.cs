@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using AspNetCore.Identity.LiteDB.Data;
 using AspNetCore.Identity.LiteDB.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -19,13 +20,37 @@ namespace SnipCodeAPI.Controllers.API
     public class AuthController : ControllerBase
     {   
         private IAuthService AuthService;
-        public AuthController(IAuthService authService)
+        private IPasswordHasher<User> PasswordHasher;
+        private IJWTService JWTService;
+        public AuthController(IAuthService authService,
+                             IPasswordHasher<User> passwordHasher,
+                             IJWTService jwtService)
         {
             this.AuthService = authService;
+            this.PasswordHasher = passwordHasher;
+            this.JWTService = jwtService;
+
+            System.Diagnostics.Debug.WriteLine("CLEAR");
+        }
+
+
+        [Authorize]
+        [HttpPost("refresh")]
+        [Route("refresh/{token}")]
+        public IActionResult RefreshToken([FromHeader] string refreshToken)
+        {           
+            var token = JWTService.RefreshTokens.FirstOrDefault(x => x.Token == refreshToken);
+            if(token != null)
+            {
+                var jwtToken = JWTService.Generate(token.Email);
+                jwtToken.RefreshToken = refreshToken;
+                return Ok(jwtToken);
+            }
+            return NotFound();
         }
 
         [HttpPost("token")]
-        public IActionResult Token()
+        public IActionResult GetToken()
         {
             var header = Request.Headers["Authorization"];
 
@@ -51,21 +76,18 @@ namespace SnipCodeAPI.Controllers.API
                 return BadRequest("Bad Credentials");
             }
 
-            var claims = new [] { new Claim(ClaimTypes.Email, usernameAndPass[0])};
+            var jwtToken = JWTService.Generate(usernameAndPass[0]);
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("asdasdadgreadsacsddscdscds"));
-            var signInCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
+            var RefreshToken = PasswordHasher.HashPassword(user,new Guid().ToString())
+            .Replace("+", string.Empty)
+            .Replace("=", string.Empty)
+            .Replace("/", string.Empty);
 
-            var token = new JwtSecurityToken(issuer: "mysite.com",
-             audience: "mysite.com",
-             expires: DateTime.Now.AddMinutes(5),
-             claims: claims,
-             signingCredentials: signInCredentials);
+            jwtToken.RefreshToken = RefreshToken;
 
-            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-            user.Token = tokenString;
-
-            return Ok(user);
+            JWTService.RefreshTokens.Add(new RefreshToken { Email = usernameAndPass[0], Token = RefreshToken});
+            System.Diagnostics.Debug.WriteLine(JWTService.RefreshTokens.Count);
+            return Ok(jwtToken);
         }
     }
 }
