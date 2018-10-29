@@ -1,60 +1,62 @@
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using AspNetCore.Identity.LiteDB.Data;
-using AspNetCore.Identity.LiteDB.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using SnipCodeAPI.Models;
 using SnipCodeAPI.Services.Interfaces;
+using System;
+using System.Linq;
+using System.Text;
 
 namespace SnipCodeAPI.Controllers.API
 {
+    [Produces("application/json")]
     [ApiController]
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
-    {   
-        private IAuthService AuthService;
-        private IPasswordHasher<User> PasswordHasher;
-        private IJWTService JWTService;
+    {
+        private readonly IAuthService _authService;
+        private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly IJwtService _jwtService;
         public AuthController(IAuthService authService,
                              IPasswordHasher<User> passwordHasher,
-                             IJWTService jwtService)
+                             IJwtService jwtService)
         {
-            this.AuthService = authService;
-            this.PasswordHasher = passwordHasher;
-            this.JWTService = jwtService;
+            _authService = authService;
+            _passwordHasher = passwordHasher;
+            _jwtService = jwtService;
 
             System.Diagnostics.Debug.WriteLine("CLEAR");
         }
 
-
+        /// <summary>
+        /// Regenerate token
+        /// </summary>
+        /// <param name="refreshToken"></param>
+        /// <returns></returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
         [Authorize]
         [HttpPost("refresh")]
         [Route("refresh/{token}")]
         public IActionResult RefreshToken([FromHeader] string refreshToken)
-        {           
-            var token = JWTService.RefreshTokens.FirstOrDefault(x => x.Token == refreshToken);
-            if(token != null)
-            {
-                var jwtToken = JWTService.Generate(token.Email);
-                jwtToken.RefreshToken = refreshToken;
-                return Ok(jwtToken);
-            }
-            return NotFound();
+        {
+            var token = _jwtService.RefreshTokens.FirstOrDefault(x => x.Token == refreshToken);
+            if (token == null)
+                return NotFound();
+            var jwtToken = _jwtService.Generate(token.Email);
+            jwtToken.RefreshToken = refreshToken;
+            return Ok(jwtToken);
         }
 
+        /// <summary>
+        /// Get new token 
+        /// </summary>
+        /// <returns></returns>
         [HttpPost("token")]
         public IActionResult GetToken()
         {
             var header = Request.Headers["Authorization"];
 
-            if(!header.ToString().StartsWith("Basic"))
+            if (!header.ToString().StartsWith("Basic"))
             {
                 return BadRequest("Wrong Request");
             }
@@ -65,28 +67,28 @@ namespace SnipCodeAPI.Controllers.API
 
             //check in the db
 
-            var user = AuthService.Authenticate(new LoginViewModel
+            var user = _authService.Authenticate(new LoginViewModel
             {
                 Email = usernameAndPass[0],
                 Password = usernameAndPass[1]
             });
 
-            if(user == null)
+            if (user == null)
             {
                 return BadRequest("Bad Credentials");
             }
 
-            var jwtToken = JWTService.Generate(usernameAndPass[0]);
+            var jwtToken = _jwtService.Generate(usernameAndPass[0]);
 
-            var RefreshToken = PasswordHasher.HashPassword(user,new Guid().ToString())
+            var refreshToken = _passwordHasher.HashPassword(user, new Guid().ToString())
             .Replace("+", string.Empty)
             .Replace("=", string.Empty)
             .Replace("/", string.Empty);
 
-            jwtToken.RefreshToken = RefreshToken;
+            jwtToken.RefreshToken = refreshToken;
 
-            JWTService.RefreshTokens.Add(new RefreshToken { Email = usernameAndPass[0], Token = RefreshToken});
-            System.Diagnostics.Debug.WriteLine(JWTService.RefreshTokens.Count);
+            _jwtService.RefreshTokens.Add(new RefreshToken { Email = usernameAndPass[0], Token = refreshToken });
+            System.Diagnostics.Debug.WriteLine(_jwtService.RefreshTokens.Count);
             return Ok(jwtToken);
         }
     }
