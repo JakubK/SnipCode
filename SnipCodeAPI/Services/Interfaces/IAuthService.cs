@@ -4,6 +4,6 @@ namespace SnipCodeAPI.Services.Interfaces
 {
     public interface IAuthService
     {
-        User Authenticate(LoginViewModel login);
+        JsonWebToken Authenticate(LoginViewModel login);
     }
 }
