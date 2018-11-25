@@ -33,7 +33,6 @@ namespace SnipCodeAPI.Services
 
       JsonWebToken jwtToken = new JsonWebToken();
       jwtToken.Expires = DateTime.Now.AddMinutes(5).Ticks;
-      System.Diagnostics.Debug.WriteLine(jwtToken.Expires);
       jwtToken.AccessToken = new JwtSecurityTokenHandler().WriteToken(token);
 
       return jwtToken;
