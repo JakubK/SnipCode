@@ -12,7 +12,10 @@ namespace SnipCodeAPI.Services
     private IUserRepository userRepository;
     private readonly IPasswordHasher<User> passwordHasher;
     private IJWTService jwtService;
-    public AuthService(IUserRepository userRepositoryParam,IPasswordHasher<User> passwordHasherParam, ISeedService seedService, IJWTService jwtServiceParam)
+    public AuthService(IUserRepository userRepositoryParam,
+      IPasswordHasher<User> passwordHasherParam,
+      ISeedService seedService,
+      IJWTService jwtServiceParam)
     {
       this.userRepository = userRepositoryParam;
       this.jwtService = jwtServiceParam;
