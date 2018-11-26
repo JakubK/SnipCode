@@ -335,3 +335,4 @@ ASALocalRun/
 .mfractor/
 /SnipCodeAPI/*.sln
 /.vscode
+SnipCodeAPI/database.db
