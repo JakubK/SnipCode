@@ -6,7 +6,12 @@ namespace SnipCodeAPI.Services
 {
   public class SeedService : ISeedService
   {
-    public void Seed(IUserRepository userRepository)
+    private IUserRepository userRepository;
+    public SeedService(IUserRepository userRepositoryParam)
+    {
+      this.userRepository = userRepositoryParam;
+    }
+    public void Seed()
     {
       //Get all users
       var users = userRepository.GetUsers();

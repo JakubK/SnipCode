@@ -18,7 +18,7 @@ namespace SnipCodeAPI.Services
       this.jwtService = jwtServiceParam;
       this.passwordHasher = passwordHasherParam;
 
-      seedService.Seed(userRepository);
+      seedService.Seed();
     }
     public JsonWebToken Authenticate(LoginViewModel login)
     {

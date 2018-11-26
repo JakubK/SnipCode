@@ -4,6 +4,6 @@ namespace SnipCodeAPI.Services.Interfaces
 {
   public interface ISeedService
   {
-      void Seed(IUserRepository userRepository);
+      void Seed();
   }
 }
