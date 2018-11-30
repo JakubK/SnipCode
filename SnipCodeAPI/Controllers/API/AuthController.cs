@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using SnipCodeAPI.Extensions;
 using SnipCodeAPI.Models;
 using SnipCodeAPI.Services.Interfaces;
 using System;
@@ -15,13 +14,13 @@ namespace SnipCodeAPI.Controllers.API
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthService _authService;
-        private readonly IJWTService _jwtService;
-        public AuthController(IAuthService authService,
-                             IJWTService jwtService)
+        private readonly IAuthService authService;
+        private readonly IJWTService jwtService;
+        public AuthController(IAuthService authServiceParam,
+                             IJWTService jwtServiceParam)
         {
-            _authService = authService;
-            _jwtService = jwtService;
+            authService = authServiceParam;
+            jwtService = jwtServiceParam;
         }
 
         /// <summary>
@@ -31,11 +30,11 @@ namespace SnipCodeAPI.Controllers.API
         [HttpPost("refresh")]
         public IActionResult RefreshToken([FromHeader] string refreshToken)
         {
-            var token = _jwtService.RefreshTokens.FirstOrDefault(x => x.Token == refreshToken);
+            var token = jwtService.RefreshTokens.FirstOrDefault(x => x.Token == refreshToken);
             if (token == null)
                 return NotFound();
                 
-            var jwtToken = _jwtService.Generate(token.Email);
+            var jwtToken = jwtService.Generate(token.Email);
             jwtToken.RefreshToken = refreshToken;
             return Ok(jwtToken);
         }
@@ -56,9 +55,8 @@ namespace SnipCodeAPI.Controllers.API
             if (!authorization.StartsWith("Basic"))
                 return BadRequest("Wrong Request");
 
-            LoginViewModel credentials = authorization.DecodeCredentials();
-            //check in the db
-            var jwt = _authService.Authenticate(credentials);
+            LoginViewModel credentials = LoginViewModel.Decode(authorization);
+            var jwt = authService.Authenticate(credentials);//check in the db
             if(jwt == null)
                 return BadRequest("Wrong credentials");
             return Ok(jwt);

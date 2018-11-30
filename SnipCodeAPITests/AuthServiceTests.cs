@@ -13,10 +13,9 @@ namespace SnipCodeAPITests
   public class AuthServiceTests
   {
     [Test]
-    public void Authenticate_WhenFakeCredentialsGiven_ReturnsNull()
+    public void Authenticate_WhenInvalidCredentialsGiven_ReturnsNull()
     {
       IUserRepository userRepositoryMock = Substitute.For<IUserRepository>();
-
       userRepositoryMock.GetUsers().Returns(new List<User>()
       {
         new User(){
@@ -25,25 +24,21 @@ namespace SnipCodeAPITests
         }
       });
 
-      IPasswordHasher<User> passwordHasherMock = Substitute.For<IPasswordHasher<User>>();
       ISeedService seedServiceMock = Substitute.For<ISeedService>();
-      IJWTService jwtServiceMock = Substitute.For<IJWTService>();
-
-      AuthService authService = new AuthService(userRepositoryMock,passwordHasherMock,seedServiceMock,jwtServiceMock);
+      AuthService authService = new AuthService(userRepositoryMock,null,seedServiceMock,null);
       LoginViewModel model = new LoginViewModel();
       model.Email = "wrong@email.com";
       model.Password = "wrongpassword";
-
+      
       JsonWebToken result = authService.Authenticate(model);
 
-      Assert.IsTrue(authService.Authenticate(model) == null);
+      Assert.IsTrue(result == null);
     }
 
     [Test]
-    public void Authenticate_WhenExistingCredentialsGiven_ReturnsJsonWebToken()
+    public void Authenticate_WhenValidCredentialsGiven_ReturnsJsonWebToken()
     {
       IUserRepository userRepositoryMock = Substitute.For<IUserRepository>();
-
       userRepositoryMock.GetUsers().Returns(new List<User>()
       {
         new User(){

@@ -13,7 +13,7 @@ namespace SnipCodeAPITests
   public class SeedServiceTests
   {
     [Test]
-    public void Seed_ClearsDBAndCreatesAdminAccount_WhenCalled()
+    public void Seed_WhenCalled_ClearsDBAndCreatesAdminAccount()
     {
       IUserRepository userRepository = Substitute.For<IUserRepository>();
       userRepository.GetUsers().Returns(new List<User>
