@@ -1,2 +1,2 @@
 # SnipCodeAPI
-API for SnipCode - Application for sharing the code snippets.
+SnipCode - Application for sharing the code snippets.
