@@ -106,7 +106,6 @@ namespace SnipCodeAPI.Controllers.API
             return NoContent();
         }
 
-
         private static string GenerateUrl(HttpRequest request, string hash)
         {
             return $"{request.Host}{request.Path.ToUriComponent()}/{hash}";
