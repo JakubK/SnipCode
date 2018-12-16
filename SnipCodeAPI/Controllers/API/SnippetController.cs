@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Net;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using SnipCodeAPI.Models.Requests;
 
 namespace SnipCodeAPI.Controllers.API
 {
@@ -53,16 +54,21 @@ namespace SnipCodeAPI.Controllers.API
         /// <summary>
         /// Create new snippet with provided snippetFiles content
         /// </summary>
-        /// <param name="snippet"></param>
+        /// <param name="snippetRequest"></param>
         /// <response code="201">Return the url to newly Snippet</response>
         /// <response code="400">If model doesn't contain required fields</response>
         [HttpPost(Name = "CreateSnippet")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
-        public ActionResult CreateSnippet(Snippet snippet)
+        public ActionResult CreateSnippet(CreateSnippetRequest snippetRequest)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            Snippet snippet = new Snippet();
+            snippet.Name = snippetRequest.Name;
+            snippet.CreatorEmail = snippetRequest.CreatorEmail;
+            
             _snippetService.Create(snippet);
             return new JsonResult(new {status = HttpStatusCode.Created, url = GenerateUrl(Request, snippet.Hash)});
         }
