@@ -1,9 +1,7 @@
 <template>
   <nav>
-    <div class="navbar-controls">
-      <button>Logo</button>
-      <button>Snippet</button>
-    </div>
+    <button>Logo</button>
+    <button>Snippet</button>
   </nav>
 </template>
 <script>
