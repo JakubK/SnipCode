@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
 import SnippetEditor from '@/SnippetEditor'
 import AuthFrame from '@/AuthFrame'
 import Register from '@/Register'
@@ -19,8 +18,6 @@ export default new Router({
       children:[
         {
           path: '/',
-          name: "HelloWorld",
-          component: HelloWorld
         }
       ]
     },
