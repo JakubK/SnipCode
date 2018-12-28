@@ -1,9 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import SnippetEditor from '@/SnippetEditor'
-import AuthFrame from '@/AuthFrame'
-import Register from '@/Register'
-import Login from '@/Login'
+import SnipCode from '@/components/SnipCode'
+import Share from '@/components/Share'
+import Snippet from '@/components/Snippet'
+import AuthFrame from '@/components/Auth/Frame/AuthFrame'
+import Register from '@/components/Auth/Register'
+import Login from '@/components/Auth/Login'
+import Profile from '@/components/Profile/Profile'
 
 
 Vue.use(Router)
@@ -13,13 +16,25 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'SnippetEditor',
-      component: SnippetEditor,
+      name: 'SnipCode',
+      component: SnipCode,
       children:[
         {
           path: '/',
+          name: "Snippet",
+          component: Snippet
+        },
+        {
+          path: 'profile',
+          name: 'Profile',
+          component: Profile
         }
       ]
+    },
+    {
+      path: '/share',
+      name: 'Share',
+      component: Share
     },
     {
       path: '/auth',
