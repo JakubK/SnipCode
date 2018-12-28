@@ -1,0 +1,33 @@
+main
+{
+  width: 100%;
+}
+
+.snippet-panel
+{
+  width: 100%;
+  height: 40px;
+  background: #34495E;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  padding-left: 40px;
+  button
+  {
+    margin-left: 40px;
+  }
+}
+
+span
+{
+  color: white;
+}
+
+textarea
+{
+  width: calc(100% - 2px);
+  resize: none;
+  padding: 0;
+
+  height: calc(100vh - 166px);
+}
