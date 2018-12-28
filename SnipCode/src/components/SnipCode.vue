@@ -6,8 +6,9 @@
   </main>
 </template>
 <script>
-import Navbar from './components/Navbar.vue'
-import Footer from './components/Footer.vue'
+
+import Navbar from './Navbar/Navbar.vue'
+import Footer from './Footer/Footer.vue'
 export default {
   name: "SnippetEditor",
   components: {Navbar, Footer}
