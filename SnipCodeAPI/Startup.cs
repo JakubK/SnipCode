@@ -33,7 +33,6 @@ namespace SnipCodeAPI
             services.AddSingleton<IDataGateway>(dataMapper => new LiteRepositoryDataMapper(Configuration.GetConnectionString("DefaultConnection")));
             services.AddSingleton<IUserRepository, UserRepository>();
             services.AddSingleton<ISnippetRepository, SnippetRepository>();
-            services.AddSingleton<ISnippetFileRepository, SnippetFileRepository>();
             services.AddSingleton<ISnippetService, SnippetService>();
             services.AddSingleton<IAuthService, AuthService>();
             services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();

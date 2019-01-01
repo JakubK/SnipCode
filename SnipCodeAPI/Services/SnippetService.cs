@@ -11,23 +11,16 @@ namespace SnipCodeAPI.Services
     public class SnippetService : ISnippetService
     {
         private readonly ISnippetRepository _snippetRepository;
-        private readonly ISnippetFileRepository _snippetFileRepository;
         private readonly IDateTime _dateTime;
 
-        public SnippetService(IDateTime dateTime, ISnippetRepository snippetRepository,
-            ISnippetFileRepository snippetFileRepository)
+        public SnippetService(IDateTime dateTime, ISnippetRepository snippetRepository)
         {
             _dateTime = dateTime;
             _snippetRepository = snippetRepository;
-            _snippetFileRepository = snippetFileRepository;
         }
 
         public void Create(Snippet snippet)
         {
-            foreach (var file in snippet.Files)
-            {
-                _snippetFileRepository.InsertSnippetFile(file);
-            }
             snippet.Hash = GenerateHash(snippet.Name);
             snippet.CreationTime = _dateTime.Now.ToString("g");
             snippet.ExpirationTime = _dateTime.Now.AddMinutes(10).ToString("g");
@@ -43,10 +36,7 @@ namespace SnipCodeAPI.Services
             var snippet = _snippetRepository.GetSnippetByHash(hash);
             if (snippet == null)
                 return false;
-            foreach (var file in snippet.Files)
-            {
-                _snippetFileRepository.DeleteSnippetFile(file.Id);
-            }
+    
             _snippetRepository.DeleteSnippet(snippet.Id);
             return true;
         }
