@@ -65,11 +65,7 @@ namespace SnipCodeAPI.Controllers.API
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            Snippet snippet = new Snippet();
-            snippet.Name = snippetRequest.Name;
-            snippet.CreatorEmail = snippetRequest.CreatorEmail;
-            
-            _snippetService.Create(snippet);
+            Snippet snippet = _snippetService.Create(snippetRequest);
             return new JsonResult(new {status = HttpStatusCode.Created, url = GenerateUrl(Request, snippet.Hash)});
         }
 

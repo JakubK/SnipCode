@@ -1,4 +1,5 @@
 ﻿using SnipCodeAPI.Models;
+using SnipCodeAPI.Models.Requests;
 using SnipCodeAPI.Repositories.Interfaces;
 using SnipCodeAPI.Services.Interfaces;
 using System.Collections.Generic;
@@ -19,12 +20,22 @@ namespace SnipCodeAPI.Services
             _snippetRepository = snippetRepository;
         }
 
-        public void Create(Snippet snippet)
+        public Snippet Create(CreateSnippetRequest request)
         {
-            snippet.Hash = GenerateHash(snippet.Name);
+            Snippet snippet = new Snippet();
+
+            int snippetCount = _snippetRepository.GetSnippets().Count();
+
+            snippet.Name = request.Name;
+            snippet.CreatorEmail = request.CreatorEmail;
+            snippet.Hash = GenerateHash(request.CreatorEmail + (snippetCount + 1));
+            snippet.Content = request.Content;
             snippet.CreationTime = _dateTime.Now.ToString("g");
             snippet.ExpirationTime = _dateTime.Now.AddMinutes(10).ToString("g");
+
             _snippetRepository.InsertSnippet(snippet);
+
+            return snippet;
         }
 
         public List<Snippet> GetSnippets() => _snippetRepository.GetSnippets().ToList();
