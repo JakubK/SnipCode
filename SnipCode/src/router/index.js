@@ -25,6 +25,12 @@ export default new Router({
           component: Snippet
         },
         {
+          path: '/:hash',
+          name: "Snippet",
+          component: Snippet,
+          props: true
+        },
+        {
           path: 'profile',
           name: 'Profile',
           component: Profile
