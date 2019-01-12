@@ -28,6 +28,13 @@ namespace SnipCodeAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(o => o.AddPolicy("EnableCors", builder =>
+            {
+                builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            }));
+
             services.AddTransient<IDateTime, SystemDateTime>();
 
             services.AddSingleton<IDataGateway>(dataMapper => new LiteRepositoryDataMapper(Configuration.GetConnectionString("DefaultConnection")));
@@ -72,6 +79,8 @@ namespace SnipCodeAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseCors("EnableCors");
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
