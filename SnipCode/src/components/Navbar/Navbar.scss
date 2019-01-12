@@ -13,3 +13,23 @@ nav
   justify-content: space-between;
   align-items: center;
 }
+
+.navbar-logo
+{
+  text-decoration: none;
+  color: white;
+}
+
+.btn-new
+{
+  padding: 15px;
+  background: #3498DB;
+  outline: none;
+  border: none;
+  color: white;
+  >svg
+  {
+    height: 10px;
+    display: inline-block;
+  }
+}

@@ -31,3 +31,18 @@ textarea
 
   height: calc(100vh - 166px);
 }
+
+.btn-share
+{
+  background: none;
+  outline: none;
+  border: 1px solid white;
+  border-radius: 2px;
+  padding: 5px;
+  color: white;
+  >svg
+  {
+    height: 10px;;
+    display: inline-block;
+  }
+}
