@@ -10,6 +10,6 @@ namespace SnipCodeAPI.Services.Interfaces
         List<Snippet> GetSnippets();
         Snippet GetSnippetByHash(string hash, out Snippet snippet);
         bool DeleteSnippet(string hash);
-        bool UpdateSnippet(string hash, Snippet snippet);
+        bool UpdateSnippet(string hash, UpdateSnippetRequest updateSnippetRequest);
     }
 }

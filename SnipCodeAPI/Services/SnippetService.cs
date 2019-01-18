@@ -28,7 +28,7 @@ namespace SnipCodeAPI.Services
 
             snippet.Name = request.Name;
             snippet.CreatorEmail = request.CreatorEmail;
-            snippet.Hash = GenerateHash(request.CreatorEmail + (snippetCount + 1));
+            snippet.Hash = GenerateHash(request.CreatorEmail + (snippetCount + 1) + request.Content);
             snippet.Content = request.Content;
             snippet.CreationTime = _dateTime.Now.ToString("g");
             snippet.ExpirationTime = _dateTime.Now.AddMinutes(10).ToString("g");
@@ -52,8 +52,18 @@ namespace SnipCodeAPI.Services
             return true;
         }
 
-        public bool UpdateSnippet(string hash, Snippet snippet) =>
-            _snippetRepository.GetSnippetByHash(hash) != null && _snippetRepository.UpdateSnippet(snippet);
+        public bool UpdateSnippet(string hash, UpdateSnippetRequest updateSnippetRequest)
+        {
+           Snippet snippet = _snippetRepository.GetSnippetByHash(hash);
+           if(snippet != null)
+           {
+            snippet.Content = updateSnippetRequest.NewContent;
+            _snippetRepository.UpdateSnippet(snippet);
+            return true;
+           }
+           
+           return false;
+        }
 
         private static string GenerateHash(string text)
         {
