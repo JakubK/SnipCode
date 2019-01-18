@@ -23,8 +23,7 @@ export default {
   {
     shareSnippet()
     {
-      console.log("share");
-      this.$store.dispatch("updateSnippetContent",this.content);
+      this.$store.dispatch("updateSnippetContent", {hash: this.hash,newContent: this.content});
     }
   },
   mounted()
