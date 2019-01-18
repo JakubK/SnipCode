@@ -72,18 +72,17 @@ namespace SnipCodeAPI.Controllers.API
         /// <summary>
         /// Update specific Snippet
         /// </summary>
-        /// <param name="hash"></param>
-        /// <param name="snippet"></param>
-        /// <response code="200">Return updated snippet</response>
+        /// <param name="updateSnippetRequest"></param>
+        /// <response code="200">Return request from input if it has been accepted and executed</response>
         /// <response code="404">Snippet not found in collection with specified hash code</response>
-        [HttpPut("{hash}", Name = "UpdateSnippet")]
+        [HttpPut(Name = "UpdateSnippet")]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
-        public ActionResult<Snippet> UpdateSnippet(string hash, Snippet snippet)
+        public ActionResult<Snippet> UpdateSnippet(UpdateSnippetRequest updateSnippetRequest)
         {
-            if (!_snippetService.UpdateSnippet(hash, snippet))
-                return NotFound(hash);
-            return Ok(snippet);
+            if (!_snippetService.UpdateSnippet(updateSnippetRequest.Hash, updateSnippetRequest))
+                return NotFound(updateSnippetRequest.Hash);
+            return Ok(updateSnippetRequest);
         }
 
         /// <summary>
