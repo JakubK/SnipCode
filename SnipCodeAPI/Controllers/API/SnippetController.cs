@@ -66,7 +66,7 @@ namespace SnipCodeAPI.Controllers.API
                 return BadRequest(ModelState);
 
             Snippet snippet = _snippetService.Create(snippetRequest);
-            return new JsonResult(new {status = HttpStatusCode.Created, url = GenerateUrl(Request, snippet.Hash)});
+            return new JsonResult(new {status = HttpStatusCode.Created, hash = snippet.Hash});
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace SnipCodeAPI.Controllers.API
 
         private static string GenerateUrl(HttpRequest request, string hash)
         {
-            return $"{request.Host}{request.Path.ToUriComponent()}/{hash}";
+            return $"{request.Host}{request.Path.ToUriComponent()}{hash}";
         }
     }
 }
