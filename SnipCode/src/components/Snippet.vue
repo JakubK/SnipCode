@@ -23,7 +23,15 @@ export default {
   {
     shareSnippet()
     {
-      this.$store.dispatch("updateSnippetContent", {hash: this.hash,newContent: this.content});
+      if(this.hash)
+        this.$store.dispatch("updateSnippetContent", {hash: this.hash,newContent: this.content});
+      else
+      {
+       this.$store.dispatch("uploadSnippetContent",this.content).then(result =>
+       {
+         this.$router.push(result.data.hash);
+       });
+      }
     }
   },
   mounted()

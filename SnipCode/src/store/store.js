@@ -26,14 +26,25 @@ export default new Vuex.Store({
         newContent: newContent
       });
 
-      console.log(newContent);
-
       axios.put("http://localhost:5000/api/snippet/", data, {
         headers: {
           'Content-Type': 'application/json',
         }
       });
       await commit('updateSnippetContent', newContent);
+    },
+    uploadSnippetContent: async({commit}, newContent) =>
+    {
+      const data = JSON.stringify({
+        name: '',
+        content: newContent,
+        creatorEmail: ''
+      });
+      return axios.post("http://localhost:5000/api/snippet/", data, {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });    
     }
   }
 })
