@@ -5,9 +5,13 @@ import axios from 'axios';
 Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
-    snippetContent: ''
+    snippetContent: '',
+    token: localStorage.getItem("token")
   },
   getters: {
+    token: state => {
+      return state.token;
+    },
     snippetByHash: state => hash => {
       return axios.get("http://localhost:5000/api/snippet/" + hash);
     }
