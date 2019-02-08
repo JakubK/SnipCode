@@ -16,7 +16,6 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'SnipCode',
       component: SnipCode,
       children:[
         {
@@ -25,16 +24,15 @@ export default new Router({
           component: Snippet
         },
         {
-          path: '/:hash',
-          name: "Snippet",
-          component: Snippet,
-          props: true
-        },
-        {
-          path: 'profile',
+          path: '/profile',
           name: 'Profile',
           component: Profile
-        }
+        },
+        {
+          path: '/:hash',
+          component: Snippet,
+          props: true
+        } 
       ]
     },
     {
