@@ -1,18 +1,42 @@
 <template>
   <footer>
     <div class="project-group">
-      <button>Info</button>
-      <button>Github</button>
+      <button>
+        <a target="_blank" href="https://github.com/JakubK/SnipCode">Github</a>
+      </button>
     </div>
     <div class="project-text">
       Made with &lt;3 by Jakub and Deadline 
     </div>
-    <button>Account</button>
+    <button @click="handleProfileAccess()">
+      Account
+    </button>
   </footer>
 </template>
 <script>
 export default {
-  name : "Footer"
+  name : "Footer",
+  methods:
+  {
+    handleProfileAccess()
+    {
+      if(this.token !== undefined && this.token !== null)
+      {
+          this.$router.push("/profile");
+      }
+      else
+      {
+          this.$router.push("/auth/login");
+      }
+    }
+  },
+  computed:
+  {
+    token()
+    {
+      return this.$store.getters.token;
+    }
+  }
 }
 </script>
 
