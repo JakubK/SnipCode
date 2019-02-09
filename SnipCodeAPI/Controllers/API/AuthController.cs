@@ -50,15 +50,12 @@ namespace SnipCodeAPI.Controllers.API
         /// </summary>
         /// <returns></returns>
         [HttpPost("login")]
-        public IActionResult Login([FromHeader] string authorization)
+        public IActionResult Login([FromBody] LoginViewModel credentials)
         {
-            if (!authorization.StartsWith("Basic"))
-                return BadRequest("Wrong Request");
-
-            LoginViewModel credentials = LoginViewModel.Decode(authorization);
+            System.Diagnostics.Debug.WriteLine(credentials.Email + " : " + credentials.Password);
             var jwt = authService.Authenticate(credentials);//check in the db
             if(jwt == null)
-                return BadRequest("Wrong credentials");
+                return Unauthorized();
             return Ok(jwt);
         }
     }
