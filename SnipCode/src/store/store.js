@@ -19,6 +19,9 @@ export default new Vuex.Store({
   mutations: {
     updateSnippetContent: (state, newContent) => {
       state.snippetContent = newContent;
+    },
+    updateAuthToken:(state, authData) => {
+      state.token = authData.accessToken;
     }
   },
   actions: {
@@ -49,6 +52,25 @@ export default new Vuex.Store({
           'Content-Type': 'application/json',
         }
       });    
+    },
+    loginWithCredentials: async({commit}, credentials ) =>
+    {
+      const data = JSON.stringify({
+        email: credentials.email,
+        password: credentials.password
+      });
+
+        return axios.post("http://localhost:5000/api/Auth/login", data, {
+          headers: {
+            'Content-Type' : 'application/json'
+          }
+        }).then((response) => 
+        {
+          commit("updateAuthToken", response.data);
+        }).catch((error) => 
+        {
+          console.log("bad credentials");
+        });
     }
   }
 })
