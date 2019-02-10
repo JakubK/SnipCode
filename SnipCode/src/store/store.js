@@ -71,6 +71,24 @@ export default new Vuex.Store({
         {
           console.log("bad credentials");
         });
+    },
+    createAccount: async({commit}, credentials) =>
+    {
+      const data = JSON.stringify({
+        email: credentials.email,
+        password: credentials.password
+      });
+
+        return axios.post("http://localhost:5000/api/Auth/register", data, {
+          headers: {
+            'Content-Type' : 'application/json'
+          }
+        }).then((response) => 
+        {
+        }).catch((error) => 
+        {
+          console.log("something went wrong");
+        });
     }
   }
 })
