@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SnipCodeAPI.Models;
+using SnipCodeAPI.Repositories.Interfaces;
 using SnipCodeAPI.Services.Interfaces;
 using System;
 using System.Linq;
@@ -16,11 +17,13 @@ namespace SnipCodeAPI.Controllers.API
     {
         private readonly IAuthService authService;
         private readonly IJWTService jwtService;
+        private readonly IUserRepository userRepository;
         public AuthController(IAuthService authServiceParam,
-                             IJWTService jwtServiceParam)
+                             IJWTService jwtServiceParam, IUserRepository userRepositoryParam)
         {
             authService = authServiceParam;
             jwtService = jwtServiceParam;
+            userRepository = userRepositoryParam;
         }
 
         /// <summary>
@@ -40,9 +43,18 @@ namespace SnipCodeAPI.Controllers.API
         }
 
         [HttpPost("register")]
-        public IActionResult Register()
+        public IActionResult Register([FromBody]LoginViewModel credentials)
         {
-            return Ok("aaa");
+            if(authService.Authenticate(credentials) != null)
+                return Unauthorized();
+
+            userRepository.InsertUser(new User
+            {
+                Email = credentials.Email,
+                Password = credentials.Password
+            });
+
+            return Ok();
         }
 
         /// <summary>
@@ -52,7 +64,6 @@ namespace SnipCodeAPI.Controllers.API
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginViewModel credentials)
         {
-            System.Diagnostics.Debug.WriteLine(credentials.Email + " : " + credentials.Password);
             var jwt = authService.Authenticate(credentials);//check in the db
             if(jwt == null)
                 return Unauthorized();
