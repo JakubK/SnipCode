@@ -7,7 +7,7 @@ import AuthFrame from '@/components/Auth/Frame/AuthFrame'
 import Register from '@/components/Auth/Register'
 import Login from '@/components/Auth/Login'
 import Profile from '@/components/Profile/Profile'
-
+import Auth from './auth'
 
 Vue.use(Router)
 
@@ -26,7 +26,8 @@ export default new Router({
         {
           path: '/profile',
           name: 'Profile',
-          component: Profile
+          component: Profile,
+          beforeEnter: Auth
         },
         {
           path: '/:hash',
