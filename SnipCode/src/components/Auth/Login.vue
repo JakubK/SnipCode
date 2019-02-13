@@ -26,12 +26,10 @@ export default {
     {
       e.preventDefault();
 
-    
-        this.$store.dispatch("loginWithCredentials", {email: this.email, password: this.password}).then(() => {
-          //token acquired
-        })
-      
-
+      this.$store.dispatch("loginWithCredentials", {email: this.email, password: this.password}).then(() => {
+        //token acquired
+        this.$router.push("/profile");
+      })
     }
   }
 }

@@ -22,6 +22,7 @@ export default new Vuex.Store({
     },
     updateAuthToken:(state, authData) => {
       state.token = authData.accessToken;
+      localStorage.setItem("token", state.token);
     }
   },
   actions: {
