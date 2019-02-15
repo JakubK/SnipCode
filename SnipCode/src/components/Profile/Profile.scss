@@ -9,6 +9,8 @@ main
   background: #ECF0F1;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
   width: 30%;
 }
 
@@ -46,4 +48,32 @@ th
 {
   padding-top: 10px;
   padding-bottom: 10px;
+}
+
+.icon-open, .icon-delete, .icon-share
+{
+  width: 30px;
+  path
+  {
+    fill: gray;
+  }
+}
+
+.icon-account
+{
+  width: 50%;
+}
+
+.btn-email, .btn-password
+{
+  padding: 10px;
+  background: gray;
+  border: none;
+  outline: none;
+  color: white;
+}
+
+.btn-email:hover, .btn-password:hover
+{
+  cursor: pointer;
 }

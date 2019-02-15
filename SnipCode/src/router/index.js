@@ -15,28 +15,6 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/',
-      component: SnipCode,
-      children:[
-        {
-          path: '/',
-          name: "Snippet",
-          component: Snippet
-        },
-        {
-          path: '/profile',
-          name: 'Profile',
-          component: Profile,
-          beforeEnter: Auth
-        },
-        {
-          path: '/:hash',
-          component: Snippet,
-          props: true
-        } 
-      ]
-    },
-    {
       path: '/share',
       name: 'Share',
       component: Share
@@ -56,6 +34,28 @@ export default new Router({
           name: "Login",
           component: Login
         }
+      ]
+    },
+    {
+      path: '/',
+      component: SnipCode,
+      children:[
+        {
+          path: '/',
+          name: "Snippet",
+          component: Snippet
+        },
+        {
+          path: '/profile',
+          name: 'Profile',
+          component: Profile,
+          beforeEnter: Auth
+        },
+        {
+          path: '/:hash',
+          component: Snippet,
+          props: true
+        } 
       ]
     }
   ]

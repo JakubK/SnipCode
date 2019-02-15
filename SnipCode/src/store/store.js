@@ -6,7 +6,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     snippetContent: '',
-    token: localStorage.getItem("token")
+    email: '',
+    token: localStorage.getItem("token").length > 9 ? localStorage.getItem("token") : null
   },
   getters: {
     token: state => {
@@ -21,8 +22,20 @@ export default new Vuex.Store({
       state.snippetContent = newContent;
     },
     updateAuthToken:(state, authData) => {
-      state.token = authData.accessToken;
-      localStorage.setItem("token", state.token);
+      if(authData !== undefined)
+      {
+        state.token = authData.accessToken;
+        localStorage.setItem("token", state.token);
+      }
+      else
+      {
+        state.token = null;
+        localStorage.setItem("token", null);
+      }
+    },
+    updateEmail:(state, email) =>
+    {
+      state.email = email;
     }
   },
   actions: {
@@ -41,13 +54,16 @@ export default new Vuex.Store({
       });
       await commit('updateSnippetContent', newContent);
     },
-    uploadSnippetContent: async({commit}, newContent) =>
+    uploadSnippetContent: async(state, newContent) =>
     {
+      const email = state.email ? state.email : '';
+
       const data = JSON.stringify({
         name: '',
         content: newContent,
-        creatorEmail: ''
+        creatorEmail: email
       });
+
       return axios.post("http://localhost:5000/api/snippet/", data, {
         headers: {
           'Content-Type': 'application/json',
@@ -67,6 +83,7 @@ export default new Vuex.Store({
           }
         }).then((response) => 
         {
+          commit("updateEmail", credentials.email);
           commit("updateAuthToken", response.data);
         }).catch((error) => 
         {
@@ -90,6 +107,10 @@ export default new Vuex.Store({
         {
           console.log("something went wrong");
         });
+    },
+    forgetToken: async({commit}) => 
+    {
+      await commit("updateAuthToken", undefined);
     }
   }
 })

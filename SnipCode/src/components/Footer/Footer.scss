@@ -13,3 +13,32 @@ footer
   justify-content: space-between;
   align-items: center;
 }
+
+.icon-github, .icon-account, .icon-logout
+{
+  width: 40px;
+  margin: 5px;
+  path
+  {
+    fill: white;
+  }
+}
+
+button
+{
+  background: none;
+  outline: none;
+  padding: 0;
+  border: none;
+}
+
+.icon-account:hover, .icon-logout:hover
+{
+  cursor: pointer;
+
+}
+
+.btn-group
+{
+  display: flex;
+}
