@@ -6,7 +6,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     snippetContent: '',
-    email: '',
+    email: localStorage.getItem("email"),
     token: localStorage.getItem("token").length > 9 ? localStorage.getItem("token") : null
   },
   getters: {
@@ -15,7 +15,13 @@ export default new Vuex.Store({
     },
     snippetByHash: state => hash => {
       return axios.get("http://localhost:5000/api/snippet/" + hash);
+    },
+    userSnippets: state => 
+    {
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
+      return axios.get("http://localhost:5000/api/snippet/user");
     }
+    
   },
   mutations: {
     updateSnippetContent: (state, newContent) => {
@@ -26,16 +32,14 @@ export default new Vuex.Store({
       {
         state.token = authData.accessToken;
         localStorage.setItem("token", state.token);
+        state.email = authData.email;
       }
       else
       {
         state.token = null;
+        state.email = null;
         localStorage.setItem("token", null);
       }
-    },
-    updateEmail:(state, email) =>
-    {
-      state.email = email;
     }
   },
   actions: {
@@ -56,14 +60,12 @@ export default new Vuex.Store({
     },
     uploadSnippetContent: async(state, newContent) =>
     {
-      const email = state.email ? state.email : '';
-
       const data = JSON.stringify({
         name: '',
         content: newContent,
-        creatorEmail: email
+        creatorEmail: localStorage.getItem('email')
       });
-
+      
       return axios.post("http://localhost:5000/api/snippet/", data, {
         headers: {
           'Content-Type': 'application/json',
@@ -77,14 +79,14 @@ export default new Vuex.Store({
         password: credentials.password
       });
 
-        return axios.post("http://localhost:5000/api/Auth/login", data, {
+         return await axios.post("http://localhost:5000/api/Auth/login", data, {
           headers: {
             'Content-Type' : 'application/json'
           }
         }).then((response) => 
         {
-          commit("updateEmail", credentials.email);
-          commit("updateAuthToken", response.data);
+          localStorage.setItem('email', credentials.email);
+           commit("updateAuthToken", response.data);
         }).catch((error) => 
         {
           console.log("bad credentials");
@@ -110,7 +112,12 @@ export default new Vuex.Store({
     },
     forgetToken: async({commit}) => 
     {
-      await commit("updateAuthToken", undefined);
+      await commit("updateAuthToken");
+    },
+    validateToken: async({commit}) =>
+    {
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
+      return await axios.get("http://localhost:5000/api/auth/validate");
     }
   }
 })
