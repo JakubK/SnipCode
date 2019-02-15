@@ -52,6 +52,21 @@ namespace SnipCodeAPI.Services
             return true;
         }
 
+        public List<Snippet> GetUserSnippets(string userEmail)
+        {
+            List<Snippet> result = new List<Snippet>();
+            List<Snippet> allSnippets = GetSnippets();
+            foreach(var snippet in allSnippets)
+            {
+                if(snippet.CreatorEmail == userEmail)
+                {
+                    result.Add(snippet);
+                }
+            }
+
+            return result;
+        }
+
         public bool UpdateSnippet(string hash, UpdateSnippetRequest updateSnippetRequest)
         {
            Snippet snippet = _snippetRepository.GetSnippetByHash(hash);

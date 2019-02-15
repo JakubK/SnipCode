@@ -6,6 +6,10 @@ using System.Net;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using SnipCodeAPI.Models.Requests;
+using Microsoft.AspNetCore.Authorization;
+using System.Linq;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace SnipCodeAPI.Controllers.API
 {
@@ -49,6 +53,18 @@ namespace SnipCodeAPI.Controllers.API
                 return NotFound(hash);
 
             return snippet;
+        }
+        
+        [Authorize]
+        [HttpGet("/user")]
+        public ActionResult<List<Snippet>> GetUserSnippets([FromHeader] string Authorization)
+        {
+            string tokenString = Authorization.Split(' ')[1];
+            var handler = new JwtSecurityTokenHandler();
+            var token = handler.ReadJwtToken(tokenString) as JwtSecurityToken;
+            var email = token.Claims.First(claim => claim.Type == ClaimTypes.Email).Value;
+
+            return _snippetService.GetUserSnippets(email);
         }
 
         /// <summary>
