@@ -56,7 +56,7 @@ namespace SnipCodeAPI.Controllers.API
         }
         
         [Authorize]
-        [HttpGet("/user")]
+        [HttpGet("user")]
         public ActionResult<List<Snippet>> GetUserSnippets([FromHeader] string Authorization)
         {
             string tokenString = Authorization.Split(' ')[1];

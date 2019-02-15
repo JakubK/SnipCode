@@ -69,5 +69,12 @@ namespace SnipCodeAPI.Controllers.API
                 return Unauthorized();
             return Ok(jwt);
         }
+
+        [Authorize]
+        [HttpGet("validate")]
+        public IActionResult Validate()
+        {
+            return Ok();
+        }
     }
 }
