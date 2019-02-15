@@ -53,6 +53,7 @@ export default new Router({
         },
         {
           path: '/:hash',
+          name: 'HashSnippet',
           component: Snippet,
           props: true
         } 
