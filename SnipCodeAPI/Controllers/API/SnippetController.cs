@@ -49,10 +49,10 @@ namespace SnipCodeAPI.Controllers.API
         [ProducesResponseType(404)]
         public ActionResult<Snippet> GetSnippet(string hash)
         {
-            if (_snippetService.GetSnippetByHash(hash, out var snippet) == null)
+            if (_snippetService.GetSnippetByHash(hash) == null)
                 return NotFound(hash);
 
-            return snippet;
+            return _snippetService.GetSnippetByHash(hash);
         }
         
         [Authorize]
@@ -105,15 +105,22 @@ namespace SnipCodeAPI.Controllers.API
         /// Delete a specific Snippet
         /// </summary>
         /// <param name="hash"></param>
+        /// <param name="Authorization"></param>
         /// <response code="204">Snippet has been removed</response>
         /// <response code="404">Snippet not found in collection with specified hash code</response>
         [HttpDelete("{hash}", Name = "DeleteSnippet")]
         [ProducesResponseType(404)]
         [ProducesResponseType(204)]
-        public IActionResult DeleteSnippet(string hash)
+        [Authorize]
+        public IActionResult DeleteSnippet(string hash,[FromHeader] string Authorization)
         {
-            if (!_snippetService.DeleteSnippet(hash))
-                return NotFound(hash);
+            string tokenString = Authorization.Split(' ')[1];
+            var handler = new JwtSecurityTokenHandler();
+            var token = handler.ReadJwtToken(tokenString) as JwtSecurityToken;
+            var email = token.Claims.First(claim => claim.Type == ClaimTypes.Email).Value;
+            if(_snippetService.GetSnippetByHash(hash).CreatorEmail == email)
+                if (!_snippetService.DeleteSnippet(hash))
+                    return NotFound(hash);
             return NoContent();
         }
 

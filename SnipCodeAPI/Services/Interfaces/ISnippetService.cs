@@ -8,7 +8,7 @@ namespace SnipCodeAPI.Services.Interfaces
     {
         Snippet Create(CreateSnippetRequest snippet);
         List<Snippet> GetSnippets();
-        Snippet GetSnippetByHash(string hash, out Snippet snippet);
+        Snippet GetSnippetByHash(string hash);
         bool DeleteSnippet(string hash);
         bool UpdateSnippet(string hash, UpdateSnippetRequest updateSnippetRequest);
         List<Snippet> GetUserSnippets(string userEmail);

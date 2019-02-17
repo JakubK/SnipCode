@@ -40,7 +40,7 @@ namespace SnipCodeAPI.Services
 
         public List<Snippet> GetSnippets() => _snippetRepository.GetSnippets().ToList();
 
-        public Snippet GetSnippetByHash(string hash, out Snippet snippet) => snippet = _snippetRepository.GetSnippetByHash(hash);
+        public Snippet GetSnippetByHash(string hash) => _snippetRepository.GetSnippetByHash(hash);
 
         public bool DeleteSnippet(string hash)
         {
