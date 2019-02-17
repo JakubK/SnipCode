@@ -15,9 +15,10 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/share',
+      path: '/share/:hash',
       name: 'Share',
-      component: Share
+      component: Share,
+      props: true
     },
     {
       path: '/auth',
