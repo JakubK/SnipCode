@@ -6,7 +6,8 @@ namespace SnipCodeAPI.Repositories.Interfaces
     public interface IDataGateway
     {
         List<User> GetAllUsers();
-        User GetUserById(int id);
+        User GetUserByEmail(string email);
+
         void RemoveUser(int id);
         void InsertUser(User user);
         bool UpdateUser(User user);

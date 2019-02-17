@@ -13,7 +13,7 @@ namespace SnipCodeAPI.Repositories
         #endregion
         #region User
         public List<User> GetAllUsers() => _liteRepository.Query<User>().Include(x=>x.Snippets).ToList();
-        public User GetUserById(int id) => _liteRepository.Query<User>().Include(x => x.Snippets).Where(x => x.ID == id).FirstOrDefault();
+        public User GetUserByEmail(string email) => _liteRepository.Query<User>().Include(x => x.Snippets).Include(x => x.SharedSnippets).Where(x => x.Email == email).FirstOrDefault();
         public void RemoveUser(int id) => _liteRepository.Delete<User>(x => x.ID == id);
         public void InsertUser(User user) => _liteRepository.Insert<User>(user);
         public bool UpdateUser(User user) => _liteRepository.Update<User>(user);
@@ -24,6 +24,8 @@ namespace SnipCodeAPI.Repositories
         public void RemoveSnippet(int id) => _liteRepository.Delete<Snippet>(x => x.Id == id);
         public void InsertSnippet(Snippet snippet) => _liteRepository.Insert<Snippet>(snippet);
         public bool UpdateSnippet(Snippet snippet) => _liteRepository.Update<Snippet>(snippet);
-        #endregion
-    }
+
+    
+    #endregion
+  }
 }

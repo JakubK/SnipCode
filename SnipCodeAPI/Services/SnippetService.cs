@@ -12,12 +12,14 @@ namespace SnipCodeAPI.Services
     public class SnippetService : ISnippetService
     {
         private readonly ISnippetRepository _snippetRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IDateTime _dateTime;
 
-        public SnippetService(IDateTime dateTime, ISnippetRepository snippetRepository)
+        public SnippetService(IDateTime dateTime, ISnippetRepository snippetRepository, IUserRepository userRepository)
         {
             _dateTime = dateTime;
             _snippetRepository = snippetRepository;
+            _userRepository = userRepository;
         }
 
         public Snippet Create(CreateSnippetRequest request)
@@ -67,6 +69,11 @@ namespace SnipCodeAPI.Services
             return result;
         }
 
+        public List<Snippet> GetSharedUserSnippets(string userEmail)
+        {
+            return _userRepository.GetUserByEmail(userEmail).SharedSnippets;
+        }
+
         public bool UpdateSnippet(string hash, UpdateSnippetRequest updateSnippetRequest)
         {
            Snippet snippet = _snippetRepository.GetSnippetByHash(hash);
@@ -93,5 +100,7 @@ namespace SnipCodeAPI.Services
 
             return stringBuilder.ToString();
         }
-    }
+
+    
+  }
 }

@@ -12,5 +12,6 @@ namespace SnipCodeAPI.Services.Interfaces
         bool DeleteSnippet(string hash);
         bool UpdateSnippet(string hash, UpdateSnippetRequest updateSnippetRequest);
         List<Snippet> GetUserSnippets(string userEmail);
+        List<Snippet> GetSharedUserSnippets(string userEmail);
     }
 }

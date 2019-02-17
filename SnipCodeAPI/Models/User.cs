@@ -10,5 +10,6 @@ namespace SnipCodeAPI.Models
         public string Password {get;set;}
         public DateTime CreationTime { get; set; }
         public List<Snippet> Snippets { get; set; } = new List<Snippet>();
+        public List<Snippet> SharedSnippets {get;set;} = new List<Snippet>();
     }
 }
