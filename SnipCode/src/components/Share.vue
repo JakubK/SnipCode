@@ -14,6 +14,7 @@
   </main>
 </template>
 <script>
+import axios from 'axios'
 export default {
   props: ['hash'],
   name: "Share",
@@ -46,7 +47,17 @@ export default {
     },
     handleShareSnippet()
     {
+      const data = JSON.stringify({
+        hash: this.hash,
+        userEmail: this.addEmail
+      });
 
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
+      axios.put("http://localhost:5000/api/snippet/share", data,{
+        headers: {
+            'Content-Type' : 'application/json'
+          }
+      })
     }
   }
 }
