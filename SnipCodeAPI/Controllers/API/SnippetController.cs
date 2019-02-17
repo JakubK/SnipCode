@@ -89,15 +89,23 @@ namespace SnipCodeAPI.Controllers.API
         /// Update specific Snippet
         /// </summary>
         /// <param name="updateSnippetRequest"></param>
+        /// <param name="Authorization"></param>
         /// <response code="200">Return request from input if it has been accepted and executed</response>
         /// <response code="404">Snippet not found in collection with specified hash code</response>
         [HttpPut(Name = "UpdateSnippet")]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
-        public ActionResult<Snippet> UpdateSnippet(UpdateSnippetRequest updateSnippetRequest)
+        [Authorize]
+        public ActionResult<Snippet> UpdateSnippet(UpdateSnippetRequest updateSnippetRequest, [FromHeader] string Authorization)
         {
-            if (!_snippetService.UpdateSnippet(updateSnippetRequest.Hash, updateSnippetRequest))
-                return NotFound(updateSnippetRequest.Hash);
+            string tokenString = Authorization.Split(' ')[1];
+            var handler = new JwtSecurityTokenHandler();
+            var token = handler.ReadJwtToken(tokenString) as JwtSecurityToken;
+            var email = token.Claims.First(claim => claim.Type == ClaimTypes.Email).Value;
+            
+            if(_snippetService.GetSnippetByHash(updateSnippetRequest.Hash).CreatorEmail == email)
+                if (!_snippetService.UpdateSnippet(updateSnippetRequest.Hash, updateSnippetRequest))
+                    return NotFound(updateSnippetRequest.Hash);
             return Ok(updateSnippetRequest);
         }
 
@@ -118,6 +126,7 @@ namespace SnipCodeAPI.Controllers.API
             var handler = new JwtSecurityTokenHandler();
             var token = handler.ReadJwtToken(tokenString) as JwtSecurityToken;
             var email = token.Claims.First(claim => claim.Type == ClaimTypes.Email).Value;
+
             if(_snippetService.GetSnippetByHash(hash).CreatorEmail == email)
                 if (!_snippetService.DeleteSnippet(hash))
                     return NotFound(hash);
