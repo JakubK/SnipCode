@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Linq;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using SnipCodeAPI.Repositories.Interfaces;
 
 namespace SnipCodeAPI.Controllers.API
 {
@@ -19,9 +20,13 @@ namespace SnipCodeAPI.Controllers.API
     public class SnippetController : ControllerBase
     {
         private readonly ISnippetService _snippetService;
+        private readonly IUserRepository _userRepository;
 
-        public SnippetController(ISnippetService snippetService) => _snippetService = snippetService;
-
+        public SnippetController(ISnippetService snippetService, IUserRepository userRepository)
+        {
+            _snippetService = snippetService;
+            _userRepository = userRepository;
+        }
         /// <summary>
         /// Get all snippets 
         /// </summary>
@@ -65,6 +70,18 @@ namespace SnipCodeAPI.Controllers.API
             var email = token.Claims.First(claim => claim.Type == ClaimTypes.Email).Value;
 
             return _snippetService.GetUserSnippets(email);
+        }
+
+        [Authorize]
+        [HttpGet("user/shared")]
+        public ActionResult<List<Snippet>> GetSharedUserSnippets([FromHeader] string Authorization)
+        {
+            string tokenString = Authorization.Split(' ')[1];
+            var handler = new JwtSecurityTokenHandler();
+            var token = handler.ReadJwtToken(tokenString) as JwtSecurityToken;
+            var email = token.Claims.First(claim => claim.Type == ClaimTypes.Email).Value;
+
+            return _snippetService.GetSharedUserSnippets(email);
         }
 
         /// <summary>
@@ -131,6 +148,28 @@ namespace SnipCodeAPI.Controllers.API
                 if (!_snippetService.DeleteSnippet(hash))
                     return NotFound(hash);
             return NoContent();
+        }
+        [Authorize]
+        [HttpPut("share")]
+        public IActionResult ShareSnippet(ShareSnippetRequest shareSnippetRequest, [FromHeader] string Authorization)
+        {
+            string tokenString = Authorization.Split(' ')[1];
+            var handler = new JwtSecurityTokenHandler();
+            var token = handler.ReadJwtToken(tokenString) as JwtSecurityToken;
+            var email = token.Claims.First(claim => claim.Type == ClaimTypes.Email).Value;
+            if(_snippetService.GetSnippetByHash(shareSnippetRequest.Hash).CreatorEmail == email)
+            {
+                User user = _userRepository.GetUserByEmail(shareSnippetRequest.UserEmail);
+                if(user.SharedSnippets == null)
+                {
+                    user.SharedSnippets = new List<Snippet>();
+                }
+
+                user.SharedSnippets.Add(_snippetService.GetSnippetByHash(shareSnippetRequest.Hash));
+                _userRepository.UpdateUser(user);
+            }
+
+            return Ok();
         }
 
         private static string GenerateUrl(HttpRequest request, string hash)
