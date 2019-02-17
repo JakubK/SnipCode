@@ -25,7 +25,6 @@ export default {
     TryToLogin(e)
     {
       e.preventDefault();
-
       this.$store.dispatch("loginWithCredentials", {email: this.email, password: this.password}).then(() => {
         //token acquired
         this.$router.push("/profile");

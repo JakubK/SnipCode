@@ -8,6 +8,11 @@ import Store from './store/store'
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
+
+Store.dispatch("validateToken").catch(() => {
+    Store.dispatch("forgetToken");
+  });
+
 new Vue({
   el: '#app',
   store: Store,
