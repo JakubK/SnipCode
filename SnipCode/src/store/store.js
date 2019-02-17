@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
     snippetContent: '',
     snippets: [],
+    sharedSnippets: [],
     email: localStorage.getItem("email"),
     token: localStorage.getItem("token").length > 9 ? localStorage.getItem("token") : null
   },
@@ -14,6 +15,10 @@ export default new Vuex.Store({
     snippets: state => 
     {
       return state.snippets
+    },
+    sharedSnippets: state =>
+    {
+      return state.sharedSnippets
     },
     token: state => {
       return state.token;
@@ -47,6 +52,10 @@ export default new Vuex.Store({
     userSnippets:(state, snippets) =>
     {
       state.snippets = snippets
+    },
+    sharedSnippets:(state, snippets) =>
+    {
+      state.sharedSnippets = snippets;
     }
   },
   actions: {
@@ -140,10 +149,18 @@ export default new Vuex.Store({
     },
     userSnippets: async({commit}) => 
     {
+      
       axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
       return await axios.get("http://localhost:5000/api/snippet/user").then(response => {
          commit("userSnippets", response.data);
       });
-    }  
+    }, 
+    sharedSnippets: async ({commit}) =>
+    {
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
+      return await axios.get("http://localhost:5000/api/snippet/user/shared").then(response => {
+         commit("sharedSnippets", response.data);
+      });
+    }
   }
 })
