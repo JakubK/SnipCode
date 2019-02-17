@@ -6,22 +6,21 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     snippetContent: '',
+    snippets: [],
     email: localStorage.getItem("email"),
     token: localStorage.getItem("token").length > 9 ? localStorage.getItem("token") : null
   },
   getters: {
+    snippets: state => 
+    {
+      return state.snippets
+    },
     token: state => {
       return state.token;
     },
     snippetByHash: state => hash => {
       return axios.get("http://localhost:5000/api/snippet/" + hash);
-    },
-    userSnippets: state => 
-    {
-      axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
-      return axios.get("http://localhost:5000/api/snippet/user");
-    }
-    
+    }  
   },
   mutations: {
     updateSnippetContent: (state, newContent) => {
@@ -40,9 +39,29 @@ export default new Vuex.Store({
         state.email = null;
         localStorage.setItem("token", null);
       }
+    },
+    deleteSnippet:(state, hash) => 
+    {
+     state.snippets = state.snippets.filter(snippet => snippet.hash !== hash);
+    },
+    userSnippets:(state, snippets) =>
+    {
+      state.snippets = snippets
     }
   },
   actions: {
+    deleteSnippet: async ({commit}, hash) =>
+    {
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
+      axios.delete("http://localhost:5000/api/snippet/" + hash, {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      }).then(() => 
+      {
+        commit("deleteSnippet", hash);
+      });
+    },
     updateSnippetContent: async ({
       commit
     }, {hash, newContent}) => {
@@ -118,6 +137,13 @@ export default new Vuex.Store({
     {
       axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
       return await axios.get("http://localhost:5000/api/auth/validate");
-    }
+    },
+    userSnippets: async({commit}) => 
+    {
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
+      return await axios.get("http://localhost:5000/api/snippet/user").then(response => {
+         commit("userSnippets", response.data);
+      });
+    }  
   }
 })

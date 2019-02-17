@@ -4,6 +4,18 @@ main
   justify-content: flex-start;
 }
 
+button
+{
+  background: none;
+  outline: none;
+  border: none;
+}
+
+button:hover
+{
+  cursor: pointer;
+}
+
 .profile-details
 {
   background: #ECF0F1;
