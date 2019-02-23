@@ -56,6 +56,10 @@ export default new Vuex.Store({
     sharedSnippets:(state, snippets) =>
     {
       state.sharedSnippets = snippets;
+    },
+    removeSharedSnippet:(state, hash) => 
+    {
+      state.sharedSnippets = state.sharedSnippets.filter(snippet => snippet.hash !== hash);
     }
   },
   actions: {
@@ -160,6 +164,22 @@ export default new Vuex.Store({
       axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
       return await axios.get("http://localhost:5000/api/snippet/user/shared").then(response => {
          commit("sharedSnippets", response.data);
+      });
+    },
+    removeSharedSnippet: async ({commit}, hash) =>
+    {
+      const data = JSON.stringify({
+        hash: hash,
+        userEmail: localStorage.getItem("email")
+      });
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
+      axios.put("http://localhost:5000/api/snippet/removeShared", data,{
+        headers: {
+            'Content-Type' : 'application/json'
+          }
+      })
+      .then(() => {
+         commit("removeSharedSnippet", hash);
       });
     }
   }
