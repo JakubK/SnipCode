@@ -17,7 +17,7 @@ namespace SnipCodeAPI.Services
       var users = userRepository.GetUsers();
       foreach(var user in users)
       {
-        userRepository.DeleteUser(user.ID);
+        //userRepository.DeleteUser(user.ID);
       }
 
       //Create new User for testing purpose

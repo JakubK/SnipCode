@@ -160,15 +160,29 @@ namespace SnipCodeAPI.Controllers.API
             if(_snippetService.GetSnippetByHash(shareSnippetRequest.Hash).CreatorEmail == email)
             {
                 User user = _userRepository.GetUserByEmail(shareSnippetRequest.UserEmail);
-                if(user.SharedSnippets == null)
+                if(!user.SharedSnippets.Any(x => x.Hash == shareSnippetRequest.Hash))
                 {
-                    user.SharedSnippets = new List<Snippet>();
+                    user.SharedSnippets.Add(_snippetService.GetSnippetByHash(shareSnippetRequest.Hash));
+                    _userRepository.UpdateUser(user);
                 }
-
-                user.SharedSnippets.Add(_snippetService.GetSnippetByHash(shareSnippetRequest.Hash));
-                _userRepository.UpdateUser(user);
             }
 
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPut("removeShared")]
+        public IActionResult RemoveSharedSnippet(ShareSnippetRequest shareSnippetRequest, [FromHeader] string Authorization)
+        {
+            string tokenString = Authorization.Split(' ')[1];
+            var handler = new JwtSecurityTokenHandler();
+            var token = handler.ReadJwtToken(tokenString) as JwtSecurityToken;
+            var email = token.Claims.First(claim => claim.Type == ClaimTypes.Email).Value;
+            User user = _userRepository.GetUserByEmail(shareSnippetRequest.UserEmail);
+
+            user.SharedSnippets.RemoveAll(x => x.Hash == shareSnippetRequest.Hash);
+            _userRepository.UpdateUser(user);
+            
             return Ok();
         }
 
