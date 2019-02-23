@@ -11,7 +11,8 @@ namespace SnipCodeAPI.Repositories
     private readonly IDataGateway _dataGateway;
     public UserRepository(IDataGateway dataGateway) => _dataGateway = dataGateway;
     public void DeleteUser(int id) => _dataGateway.RemoveUser(id);
-    public User GetUserById(int userId) => _dataGateway.GetUserById(userId);
+
+    public User GetUserByEmail(string email) => _dataGateway.GetUserByEmail(email);
     public IEnumerable<User> GetUsers() => _dataGateway.GetAllUsers() ?? new List<User>();
     public void InsertUser(User user) => _dataGateway.InsertUser(user);
     public bool UpdateUser(User user) => _dataGateway.UpdateUser(user);

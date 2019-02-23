@@ -12,8 +12,8 @@ namespace SnipCodeAPI.Repositories
         public LiteRepositoryDataMapper(string connectionString) => _liteRepository = new LiteRepository(connectionString);
         #endregion
         #region User
-        public List<User> GetAllUsers() => _liteRepository.Query<User>().Include(x=>x.Snippets).ToList();
-        public User GetUserByEmail(string email) => _liteRepository.Query<User>().Include(x => x.Snippets).Include(x => x.SharedSnippets).Where(x => x.Email == email).FirstOrDefault();
+        public List<User> GetAllUsers() => _liteRepository.Query<User>().ToList();
+        public User GetUserByEmail(string email) => _liteRepository.Query<User>().Where(x => x.Email == email).FirstOrDefault();
         public void RemoveUser(int id) => _liteRepository.Delete<User>(x => x.ID == id);
         public void InsertUser(User user) => _liteRepository.Insert<User>(user);
         public bool UpdateUser(User user) => _liteRepository.Update<User>(user);
