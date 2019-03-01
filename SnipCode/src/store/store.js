@@ -7,14 +7,23 @@ export default new Vuex.Store({
   state: {
     snippetContent: '',
     snippets: [],
+    snippet: {},
     sharedSnippets: [],
-    email: '',
+    email: localStorage.getItem('email'),
     token: localStorage.getItem("token").length > 9 ? localStorage.getItem("token") : null
   },
   getters: {
+    isOwner: state =>
+    {
+      return state.email === state.snippet.creatorEmail;
+    },
     email: state =>
     {
       return state.email == '' ? localStorage.getItem('email') : state.email;
+    },
+    snippet: state =>
+    {
+      return state.snippet;
     },
     snippets: state => 
     {
@@ -26,10 +35,7 @@ export default new Vuex.Store({
     },
     token: state => {
       return state.token;
-    },
-    snippetByHash: state => hash => {
-      return axios.get("http://localhost:5000/api/snippet/" + hash);
-    }  
+    }
   },
   mutations: {
     updateSnippetContent: (state, newContent) => {
@@ -39,6 +45,10 @@ export default new Vuex.Store({
     {
       state.email = newEmail;
       localStorage.setItem('email', newEmail);
+    },
+    snippet: (state, snippet) =>
+    {
+      state.snippet = snippet;
     },
     updateAuthToken:(state, authData) => {
       if(authData !== undefined)
@@ -73,6 +83,11 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    snippetByHash: async({commit}, hash) =>
+    {
+      const snippet = await axios.get("http://localhost:5000/api/snippet/" + hash);
+      commit("snippet", snippet.data);
+    },
     deleteSnippet: async ({commit}, hash) =>
     {
       axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
