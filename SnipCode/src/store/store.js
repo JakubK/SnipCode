@@ -90,11 +90,12 @@ export default new Vuex.Store({
       });
       await commit('updateSnippetContent', newContent);
     },
-    uploadSnippetContent: async(state, newContent) =>
+    uploadSnippetContent: async(state, {content, name}) =>
     {
       const data = JSON.stringify({
         name: '',
-        content: newContent,
+        content: content,
+        name: name,
         creatorEmail: localStorage.getItem('email')
       });
       
