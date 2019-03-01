@@ -33,7 +33,7 @@ export default {
       {
         if(this.$store.getters.token)
         {
-          this.$router.push('/submit');
+          this.$router.push({name: 'SubmitSnippet', params: {content: this.content}});
         }
         else
         {
