@@ -1,0 +1,21 @@
+.submit-background
+{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background: rgba(0,0,0,0.6);
+  top: 0;
+  z-index: 100;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.submit-panel
+{
+  width: 550px;
+  height: 300px;
+  background: white;
+  border-radius: 15px;
+}

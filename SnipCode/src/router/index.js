@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import SnipCode from '@/components/SnipCode'
 import Share from '@/components/Share'
 import Snippet from '@/components/Snippet'
+import SubmitSnippet from '@/components/SubmitSnippet'
 import AuthFrame from '@/components/Auth/Frame/AuthFrame'
 import Register from '@/components/Auth/Register'
 import Login from '@/components/Auth/Login'
@@ -44,7 +45,15 @@ export default new Router({
         {
           path: '/',
           name: "Snippet",
-          component: Snippet
+          component: Snippet,
+          children:[
+            {
+              path: '/submit',
+              name: "SubmitSnippet",
+              component: SubmitSnippet,
+              props: true
+            }
+          ]
         },
         {
           path: '/profile',
