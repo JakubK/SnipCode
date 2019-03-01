@@ -2,6 +2,10 @@ main
 {
   display: flex;
   justify-content: flex-start;
+
+  height: calc(100% - 120px);
+  position: absolute;
+  width: 100%;
 }
 
 button

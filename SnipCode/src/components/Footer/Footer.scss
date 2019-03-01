@@ -12,6 +12,9 @@ footer
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  position: absolute;
+  bottom: 0;
 }
 
 .icon-github, .icon-account, .icon-logout
