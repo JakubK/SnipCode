@@ -8,10 +8,14 @@ export default new Vuex.Store({
     snippetContent: '',
     snippets: [],
     sharedSnippets: [],
-    email: localStorage.getItem("email"),
+    email: '',
     token: localStorage.getItem("token").length > 9 ? localStorage.getItem("token") : null
   },
   getters: {
+    email: state =>
+    {
+      return state.email == '' ? localStorage.getItem('email') : state.email;
+    },
     snippets: state => 
     {
       return state.snippets
@@ -31,18 +35,24 @@ export default new Vuex.Store({
     updateSnippetContent: (state, newContent) => {
       state.snippetContent = newContent;
     },
+    email: (state, newEmail) =>
+    {
+      state.email = newEmail;
+      localStorage.setItem('email', newEmail);
+    },
     updateAuthToken:(state, authData) => {
       if(authData !== undefined)
       {
         state.token = authData.accessToken;
         localStorage.setItem("token", state.token);
-        state.email = authData.email;
       }
       else
       {
         state.token = null;
-        state.email = null;
         localStorage.setItem("token", null);
+
+        localStorage.setItem("email", '');
+        state.email = '';
       }
     },
     deleteSnippet:(state, hash) => 
@@ -111,7 +121,7 @@ export default new Vuex.Store({
         email: credentials.email,
         password: credentials.password
       });
-
+        commit("email", credentials.email);
          return await axios.post("http://localhost:5000/api/Auth/login", data, {
           headers: {
             'Content-Type' : 'application/json'
@@ -138,6 +148,23 @@ export default new Vuex.Store({
           }
         }).then((response) => 
         {
+        }).catch((error) => 
+        {
+          console.log("something went wrong");
+        });
+    },
+    changePassword: async({commit}, passwords) =>
+    {
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
+      const data = JSON.stringify({
+        oldPassword: passwords.oldPassword,
+        newPassword: passwords.newPassword
+      });
+
+      return axios.put("http://localhost:5000/api/Auth/change/password", data, {
+          headers: {
+            'Content-Type' : 'application/json'
+          }
         }).catch((error) => 
         {
           console.log("something went wrong");

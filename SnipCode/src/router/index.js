@@ -9,6 +9,7 @@ import Register from '@/components/Auth/Register'
 import Login from '@/components/Auth/Login'
 import Profile from '@/components/Profile/Profile'
 import Auth from './auth'
+import ChangePassword from '@/components/Profile/ChangePassword/ChangePassword'
 
 Vue.use(Router)
 
@@ -59,7 +60,14 @@ export default new Router({
           path: '/profile',
           name: 'Profile',
           component: Profile,
-          beforeEnter: Auth
+          beforeEnter: Auth, 
+          children:[
+            {
+              path:'/change/password',
+              name: "ChangePassword",
+              component: ChangePassword
+            }
+          ]
         },
         {
           path: '/:hash',
