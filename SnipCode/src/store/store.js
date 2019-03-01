@@ -13,9 +13,9 @@ export default new Vuex.Store({
     token: localStorage.getItem("token").length > 9 ? localStorage.getItem("token") : null
   },
   getters: {
-    isOwner: state =>
+    canEdit: state =>
     {
-      return state.email === state.snippet.creatorEmail;
+      return (state.email === state.snippet.creatorEmail || state.snippet.creatorEmail === undefined || state.snippet.creatorEmail === null);
     },
     email: state =>
     {
