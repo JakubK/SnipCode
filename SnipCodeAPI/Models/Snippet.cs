@@ -13,6 +13,6 @@ namespace SnipCodeAPI.Models
         public string Content {get;set;}
         public string CreatorEmail {get;set;}
         public string CreationTime { get; set; }
-        public string ExpirationTime { get; set; }
+        public string LastModified {get;set;}
     }
 }

@@ -33,7 +33,7 @@ namespace SnipCodeAPI.Services
             snippet.Hash = GenerateHash(request.CreatorEmail + (snippetCount + 1) + request.Content);
             snippet.Content = request.Content;
             snippet.CreationTime = _dateTime.Now.ToString("g");
-            snippet.ExpirationTime = _dateTime.Now.AddMinutes(10).ToString("g");
+            snippet.LastModified = snippet.CreationTime;
 
             _snippetRepository.InsertSnippet(snippet);
 
@@ -93,6 +93,7 @@ namespace SnipCodeAPI.Services
            if(snippet != null)
            {
             snippet.Content = updateSnippetRequest.NewContent;
+            snippet.LastModified = _dateTime.Now.ToString("g");
             _snippetRepository.UpdateSnippet(snippet);
             return true;
            }
