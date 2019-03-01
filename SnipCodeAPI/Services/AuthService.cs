@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using SnipCodeAPI.Models;
+using SnipCodeAPI.Models.Requests;
 using SnipCodeAPI.Repositories.Interfaces;
 using SnipCodeAPI.Services.Interfaces;
 using System;
@@ -40,6 +41,23 @@ namespace SnipCodeAPI.Services
       jwtService.RefreshTokens.Add(new RefreshToken { Email = user.Email, Token = refreshToken });
 
       return jwt;
+    }
+
+    public bool TryChangePassword(string email, ChangePasswordRequest changePasswordRequest)
+    {
+      User user = userRepository.GetUsers().FirstOrDefault(x => x.Email == email);
+
+      if(user == null)
+        return false;
+
+      if(user.Password == changePasswordRequest.OldPassword)
+      {
+        user.Password = changePasswordRequest.NewPassword;
+        userRepository.UpdateUser(user);
+        return true;
+      }
+      
+      return false;
     }
   }
 }
