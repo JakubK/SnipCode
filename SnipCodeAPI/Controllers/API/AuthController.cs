@@ -2,10 +2,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SnipCodeAPI.Models;
+using SnipCodeAPI.Models.Requests;
 using SnipCodeAPI.Repositories.Interfaces;
 using SnipCodeAPI.Services.Interfaces;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 
 namespace SnipCodeAPI.Controllers.API
@@ -40,6 +43,23 @@ namespace SnipCodeAPI.Controllers.API
             var jwtToken = jwtService.Generate(token.Email);
             jwtToken.RefreshToken = refreshToken;
             return Ok(jwtToken);
+        }
+
+        [Authorize]
+        [HttpPut("change/password")]
+        public IActionResult ChangePassword([FromHeader] string Authorization, ChangePasswordRequest changePasswordRequest)
+        {
+            string tokenString = Authorization.Split(' ')[1];
+            var handler = new JwtSecurityTokenHandler();
+            var token = handler.ReadJwtToken(tokenString) as JwtSecurityToken;
+            var email = token.Claims.First(claim => claim.Type == ClaimTypes.Email).Value;
+            
+            bool passwordChanged = authService.TryChangePassword(email,changePasswordRequest);
+
+            if(passwordChanged)
+                return Ok();
+            else
+                return Unauthorized();
         }
 
         [HttpPost("register")]
