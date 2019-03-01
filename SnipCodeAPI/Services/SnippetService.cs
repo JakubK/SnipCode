@@ -49,8 +49,21 @@ namespace SnipCodeAPI.Services
             var snippet = _snippetRepository.GetSnippetByHash(hash);
             if (snippet == null)
                 return false;
+
+            //foreach user check if he has this snippet shared
+            var users = _userRepository.GetUsers();
+            foreach(var user in users)
+            {
+                if(user.SharedSnippets.Any(x => x.Hash == hash))
+                {
+                    user.SharedSnippets.RemoveAll(x => x.Hash == hash);
+                    System.Diagnostics.Debug.WriteLine("REMOVED " + hash);
+                    _userRepository.UpdateUser(user);
+                }
+            }
     
             _snippetRepository.DeleteSnippet(snippet.Id);
+
             return true;
         }
 
