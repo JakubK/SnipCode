@@ -20,7 +20,6 @@ export default {
   data()
   {
     return{
-      content: '',
       readonly: false
     };
   },
@@ -40,7 +39,6 @@ export default {
         {
           this.$store.dispatch("uploadSnippetContent",{content: this.snippet.content}).then(result =>
           {
-            console.log(this.content);
             this.$router.push(result.data.hash);
           });
         }
@@ -62,7 +60,7 @@ export default {
   {
     if(!this.hash)
     {
-      this.content = this.$store.state.snippetContent;
+      this.$store.commit("snippet", {});
     }
     else
     {
