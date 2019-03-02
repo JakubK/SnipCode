@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using HashidsNet;
 
 namespace SnipCodeAPI.Services
 {
@@ -14,12 +15,15 @@ namespace SnipCodeAPI.Services
         private readonly ISnippetRepository _snippetRepository;
         private readonly IUserRepository _userRepository;
         private readonly IDateTime _dateTime;
+        private readonly Hashids hashids;
 
         public SnippetService(IDateTime dateTime, ISnippetRepository snippetRepository, IUserRepository userRepository)
         {
             _dateTime = dateTime;
             _snippetRepository = snippetRepository;
             _userRepository = userRepository;
+
+            hashids = new Hashids("randomSalt",8);
         }
 
         public Snippet Create(CreateSnippetRequest request)
@@ -30,7 +34,7 @@ namespace SnipCodeAPI.Services
 
             snippet.Name = request.Name;
             snippet.CreatorEmail = request.CreatorEmail;
-            snippet.Hash = GenerateHash(request.CreatorEmail + (snippetCount + 1) + request.Content);
+            snippet.Hash = GenerateHash(snippetCount);
             snippet.Content = request.Content;
             snippet.CreationTime = _dateTime.Now.ToString("g");
             snippet.LastModified = snippet.CreationTime;
@@ -101,20 +105,9 @@ namespace SnipCodeAPI.Services
            return false;
         }
 
-        private static string GenerateHash(string text)
+        private string GenerateHash(int id)
         {
-            var md5 = MD5.Create();
-            var inputBytes = Encoding.ASCII.GetBytes(text);
-            var hash = md5.ComputeHash(inputBytes);
-            var stringBuilder = new StringBuilder();
-            foreach (var value in hash)
-            {
-                stringBuilder.Append(value.ToString("X2"));
-            }
-
-            return stringBuilder.ToString();
+            return hashids.Encode(id);
         }
-
-    
   }
 }
