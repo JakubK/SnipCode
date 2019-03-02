@@ -43,6 +43,17 @@ export default {
           });
         }
       }
+    },
+    initializeSnippet()
+    {
+      if(!this.hash)
+      {
+        this.$store.commit("snippet", {});
+      }
+      else
+      {
+        this.$store.dispatch("snippetByHash", this.hash);
+      }
     }
   },
   computed:
@@ -58,13 +69,12 @@ export default {
   },
   mounted()
   {
-    if(!this.hash)
+    this.initializeSnippet();
+  },
+  watch:{
+    $route (to, from)
     {
-      this.$store.commit("snippet", {});
-    }
-    else
-    {
-      this.$store.dispatch("snippetByHash", this.hash);
+      this.initializeSnippet();      
     }
   }
 }
