@@ -38,7 +38,7 @@ export default {
     {
       if(this.token !== undefined && this.token !== null)
       {
-        this.$store.dispatch("forgetToken").then(() => 
+        this.$store.dispatch("logout").then(() => 
         {
           this.$router.push("/auth/login");
         });

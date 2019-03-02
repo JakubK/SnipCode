@@ -45,6 +45,20 @@ namespace SnipCodeAPI.Controllers.API
         }
 
         [Authorize]
+        [HttpDelete("logout")]
+        public IActionResult Logout([FromHeader] string Authorization)
+        {
+            string tokenString = Authorization.Split(' ')[1];
+            var handler = new JwtSecurityTokenHandler();
+            var token = handler.ReadJwtToken(tokenString) as JwtSecurityToken;
+            var email = token.Claims.First(claim => claim.Type == ClaimTypes.Email).Value;
+
+            jwtService.RefreshTokens.RemoveAll(x => x.Email == email);
+
+            return Ok();
+        }
+
+        [Authorize]
         [HttpPut("change/password")]
         public IActionResult ChangePassword([FromHeader] string Authorization, ChangePasswordRequest changePasswordRequest)
         {

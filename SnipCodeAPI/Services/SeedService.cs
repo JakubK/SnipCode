@@ -21,11 +21,11 @@ namespace SnipCodeAPI.Services
       }
 
       //Create new User for testing purpose
-      userRepository.InsertUser(new User()
-      {
-        Email = "Admin",
-        Password = "admin"
-      });
+      // userRepository.InsertUser(new User()
+      // {
+      //   Email = "Admin",
+      //   Password = "admin"
+      // });
 
     }
   }

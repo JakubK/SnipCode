@@ -61,8 +61,8 @@ export default new Vuex.Store({
       {
         state.token = null;
         localStorage.setItem("token", null);
-
         localStorage.setItem("email", '');
+        localStorage.setItem("refresh-token", null);
         state.email = '';
       }
     },
@@ -84,6 +84,18 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    logout: async({commit}) => 
+    {
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
+      axios.delete("http://localhost:5000/api/Auth/logout", {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      }).then(() => 
+      {
+        commit("updateAuthToken");
+      });
+    },
     snippetByHash: async({commit}, hash) =>
     {
       const snippet = await axios.get("http://localhost:5000/api/snippet/" + hash);

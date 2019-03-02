@@ -61,7 +61,6 @@ namespace SnipCodeAPI.Services
                 if(user.SharedSnippets.Any(x => x.Hash == hash))
                 {
                     user.SharedSnippets.RemoveAll(x => x.Hash == hash);
-                    System.Diagnostics.Debug.WriteLine("REMOVED " + hash);
                     _userRepository.UpdateUser(user);
                 }
             }
