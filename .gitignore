@@ -336,3 +336,4 @@ ASALocalRun/
 /SnipCodeAPI/*.sln
 /.vscode
 SnipCodeAPI/database.db
+SnipCodeAPI/hangfire.db

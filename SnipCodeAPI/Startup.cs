@@ -16,6 +16,8 @@ using System.IO;
 using System.Reflection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Hangfire;
+using Hangfire.LiteDB;
 
 namespace SnipCodeAPI
 {
@@ -27,7 +29,8 @@ namespace SnipCodeAPI
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
+        {        
+            services.AddHangfire(x => x.UseLiteDbStorage(Configuration.GetConnectionString("Hangfire")));
             services.AddCors(o => o.AddPolicy("EnableCors", builder =>
             {
                 builder.AllowAnyOrigin()
@@ -95,6 +98,8 @@ namespace SnipCodeAPI
 
             app.UseMvc();
             app.UseSwagger();
+
+            app.UseHangfireServer();
 
             app.UseSwaggerUI(c =>
             {
