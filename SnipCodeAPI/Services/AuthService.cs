@@ -38,7 +38,15 @@ namespace SnipCodeAPI.Services
             .Replace("/", string.Empty);
 
       jwt.RefreshToken = refreshToken;
-      jwtService.RefreshTokens.Add(new RefreshToken { Email = user.Email, Token = refreshToken });
+      var token = jwtService.RefreshTokens.FirstOrDefault(x => x.Email == user.Email);
+      if(token == null)
+      {
+        jwtService.RefreshTokens.Add(new RefreshToken { Email = user.Email, Token = refreshToken });
+      }
+      else
+      {
+        token.Token = refreshToken;
+      }
 
       return jwt;
     }
