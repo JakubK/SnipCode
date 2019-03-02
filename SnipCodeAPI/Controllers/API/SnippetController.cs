@@ -11,6 +11,8 @@ using System.Linq;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using SnipCodeAPI.Repositories.Interfaces;
+using System;
+using Hangfire;
 
 namespace SnipCodeAPI.Controllers.API
 {
@@ -99,6 +101,15 @@ namespace SnipCodeAPI.Controllers.API
                 return BadRequest(ModelState);
 
             Snippet snippet = _snippetService.Create(snippetRequest);
+
+            //if it has no creatorEmail then create a job to destroy if after 10 minutes
+            if(string.IsNullOrEmpty(snippetRequest.CreatorEmail))
+            {
+                BackgroundJob.Schedule(
+                () => _snippetService.DeleteSnippet(snippet.Hash),
+                TimeSpan.FromMinutes(10));
+            }
+            
             return new JsonResult(new {status = HttpStatusCode.Created, hash = snippet.Hash});
         }
 
