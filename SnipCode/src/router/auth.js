@@ -1,4 +1,5 @@
-import store from '../store/store';
+import store from '../store/store'
+import axios from 'axios'
 
 export default  (to, from, next) => {
   if (store.getters.token) {
@@ -8,15 +9,33 @@ export default  (to, from, next) => {
         {
           next();
         }
-        else
-        {
-          store.dispatch("forgetToken");
-          next('/auth/register');
-        }
-      }).catch(() => 
+      }).catch((error) => 
       {
-        store.dispatch("forgetToken");
-        next('/auth/register');
+        if(error.response.status === 401)
+        {
+          //try to use refreshToken
+          axios.post("http://localhost:5000/api/Auth/refresh",null,{
+            headers:{
+              'Content-Type' : 'application/json',
+              'refreshToken' : localStorage.getItem('refresh-token')
+            }
+          }).then((response) => 
+          {
+            if(response)
+            {
+              if(response.status === 200)
+              {
+                store.commit("updateAuthToken", response.data);
+                next();
+              }
+            }
+            else
+            {
+              store.dispatch("forgetToken");
+              next('/auth/login');
+            }
+          });
+        }
       })
   } else {
     next('/auth/register');

@@ -32,7 +32,6 @@ namespace SnipCodeAPI.Controllers.API
         /// <summary>
         /// Regenerate token
         /// </summary>
-        [Authorize]
         [HttpPost("refresh")]
         public IActionResult RefreshToken([FromHeader] string refreshToken)
         {

@@ -55,6 +55,7 @@ export default new Vuex.Store({
       {
         state.token = authData.accessToken;
         localStorage.setItem("token", state.token);
+        localStorage.setItem("refresh-token", authData.refreshToken);
       }
       else
       {
