@@ -9,6 +9,7 @@
         <p>Or copy Snippet link to your clipboard</p>
         <button @click="handleCopy()">Copy link to clipboard</button>
         <p id="url">{{ url }}</p>
+        <button @click="goBack()">Go back</button>
       </div>
     </div>
   </main>
@@ -45,13 +46,16 @@ export default {
       document.execCommand('copy');
       document.body.removeChild(el);
     },
+    goBack()
+    {
+      this.$router.go(-1);
+    },
     handleShareSnippet()
     {
       const data = JSON.stringify({
         hash: this.hash,
         userEmail: this.addEmail
       });
-
       axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
       axios.put("http://localhost:5000/api/snippet/share", data,{
         headers: {
