@@ -5,7 +5,6 @@
     <form class="login-form">
       <input v-model="email" type="text" placeholder="Email Address"/>
       <input v-model="password" type="password" placeholder="Password"/>
-      <label>I forgot my Password</label>
       <button @click="TryToLogin">Sign in</button>
     </form>
   </div>
