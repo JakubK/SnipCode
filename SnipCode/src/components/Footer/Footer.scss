@@ -45,3 +45,19 @@ button
 {
   display: flex;
 }
+
+.project-text
+{
+  color: white;
+  display: inline-block;
+}
+
+.heart-icon
+{
+  height: 20px;
+  >path
+  {
+    fill: red;
+  }
+}
+}
