@@ -37,7 +37,7 @@ namespace SnipCodeAPI.Controllers.API
         {
             var token = jwtService.RefreshTokens.FirstOrDefault(x => x.Token == refreshToken);
             if (token == null)
-                return NotFound();
+                return Unauthorized();
                 
             var jwtToken = jwtService.Generate(token.Email);
             jwtToken.RefreshToken = refreshToken;
