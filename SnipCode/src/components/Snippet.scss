@@ -9,6 +9,7 @@ main
   height: 40px;
   background: #34495E;
   display: flex;
+  flex-direction: row;
   align-items: center;
   box-sizing: border-box;
   padding-left: 40px;
@@ -44,5 +45,20 @@ textarea
   {
     height: 10px;;
     display: inline-block;
+  }
+}
+
+@media only screen and (max-width: 430px) {
+  .snippet-panel{
+    flex-direction: column;
+    height: 100px;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    .btn-share
+    {
+      margin: 0;
+    }
   }
 }

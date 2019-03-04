@@ -38,7 +38,6 @@ button
 .icon-account:hover, .icon-logout:hover
 {
   cursor: pointer;
-
 }
 
 .btn-group
@@ -60,4 +59,14 @@ button
     fill: red;
   }
 }
+
+@media only screen and (max-width: 430px) {
+  .project-text
+  {
+    display: none;
+  }
+  .project-group
+  {
+    display: none;
+  }
 }
