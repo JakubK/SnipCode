@@ -73,7 +73,7 @@ namespace SnipCodeAPITests
         }
 
         [Test]
-        public void UpdateSnippet_WhenSnippetAreNotAvailable_ReturnsFalse()
+        public void UpdateSnippet_WhenSnippetsAreNotAvailable_ReturnsFalse()
         {
             IDataGateway gateway = Substitute.For<IDataGateway>();
             gateway.UpdateSnippet(Arg.Any<Snippet>()).Returns(false);
