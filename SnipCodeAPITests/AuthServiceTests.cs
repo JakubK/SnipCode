@@ -24,8 +24,7 @@ namespace SnipCodeAPITests
         }
       });
 
-      ISeedService seedServiceMock = Substitute.For<ISeedService>();
-      AuthService authService = new AuthService(userRepositoryMock,null,seedServiceMock,null);
+      AuthService authService = new AuthService(userRepositoryMock,null,null);
       LoginViewModel model = new LoginViewModel();
       model.Email = "wrong@email.com";
       model.Password = "wrongpassword";
@@ -48,12 +47,11 @@ namespace SnipCodeAPITests
       });
 
       IPasswordHasher<User> passwordHasherMock = Substitute.For<IPasswordHasher<User>>();
-      ISeedService seedServiceMock = Substitute.For<ISeedService>();
       IJWTService jwtServiceMock = Substitute.For<IJWTService>();
       jwtServiceMock.Generate(Arg.Any<string>()).Returns(new JsonWebToken());
       jwtServiceMock.RefreshTokens.Returns(new List<RefreshToken>());
 
-      AuthService authService = new AuthService(userRepositoryMock,passwordHasherMock,seedServiceMock,jwtServiceMock);
+      AuthService authService = new AuthService(userRepositoryMock,passwordHasherMock,jwtServiceMock);
       LoginViewModel model = new LoginViewModel();
       model.Email = "Admin";
       model.Password = "admin";

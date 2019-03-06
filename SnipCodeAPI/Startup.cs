@@ -48,8 +48,6 @@ namespace SnipCodeAPI
             services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddSingleton<IJWTService, JWTService>();
 
-            services.AddTransient<ISeedService, SeedService>();
-
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
                options.TokenValidationParameters = new TokenValidationParameters

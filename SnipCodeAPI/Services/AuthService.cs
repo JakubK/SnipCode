@@ -15,14 +15,12 @@ namespace SnipCodeAPI.Services
     private IJWTService jwtService;
     public AuthService(IUserRepository userRepositoryParam,
       IPasswordHasher<User> passwordHasherParam,
-      ISeedService seedService,
       IJWTService jwtServiceParam)
     {
       this.userRepository = userRepositoryParam;
       this.jwtService = jwtServiceParam;
       this.passwordHasher = passwordHasherParam;
 
-      seedService.Seed();
     }
     public JsonWebToken Authenticate(LoginViewModel login)
     {
