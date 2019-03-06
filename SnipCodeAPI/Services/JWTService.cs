@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SnipCodeAPI.Models;
 using SnipCodeAPI.Services.Interfaces;
@@ -13,16 +14,17 @@ namespace SnipCodeAPI.Services
   public class JWTService : IJWTService
   {
     public List<RefreshToken> RefreshTokens { get; set; }
-
-    public JWTService()
+    private IConfiguration configuration;
+    public JWTService(IConfiguration configurationParam)
     {
       RefreshTokens = new List<RefreshToken>();
+      this.configuration = configurationParam;
     }
     public JsonWebToken Generate(string email)
     {
       var claims = new [] { new Claim(ClaimTypes.Email, email)};
 
-      var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("asdasdadgreadsacsddscdscds"));
+      var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("Keys")["Jwt"]));
       var signInCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
 
       var token = new JwtSecurityToken(issuer: "mysite.com",

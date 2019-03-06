@@ -46,7 +46,7 @@ namespace SnipCodeAPI
             services.AddSingleton<ISnippetService, SnippetService>();
             services.AddSingleton<IAuthService, AuthService>();
             services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
-            services.AddSingleton<IJWTService, JWTService>();
+            services.AddSingleton<IJWTService>(jwtSerice => new JWTService(Configuration));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
@@ -58,7 +58,7 @@ namespace SnipCodeAPI
                    ValidateIssuerSigningKey = true,
                    ValidIssuer = "mysite.com",
                    ValidAudience = "mysite.com",
-                   IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("asdasdadgreadsacsddscdscds"))
+                   IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("Keys")["Jwt"]))
                }; 
             });            
 
