@@ -1,15 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import SnipCode from '@/components/SnipCode'
-import Share from '@/components/Share'
-import Snippet from '@/components/Snippet'
-import SubmitSnippet from '@/components/SubmitSnippet'
-import AuthFrame from '@/components/Auth/Frame/AuthFrame'
-import Register from '@/components/Auth/Register'
-import Login from '@/components/Auth/Login'
-import Profile from '@/components/Profile/Profile'
 import Auth from './auth'
-import ChangePassword from '@/components/Profile/ChangePassword/ChangePassword'
 
 Vue.use(Router)
 
@@ -19,39 +10,39 @@ export default new Router({
     {
       path: '/share/:hash',
       name: 'Share',
-      component: Share,
+      component: () => import('@/components/Share'),
       props: true
     },
     {
       path: '/auth',
       name: 'Auth',
-      component: AuthFrame,
+      component: () => import('@/components/Auth/Frame/AuthFrame'),
       children:[
         {
           path: 'register',
           name: "Register",
-          component: Register
+          component: () => import('@/components/Auth/Register')
         },
         {
           path: 'login',
           name: "Login",
-          component: Login
+          component: () => import('@/components/Auth/Login')
         }
       ]
     },
     {
       path: '/',
-      component: SnipCode,
+      component: () => import('@/components/SnipCode'),
       children:[
         {
           path: '/',
           name: "Snippet",
-          component: Snippet,
+          component: () => import('@/components/Snippet'),
           children:[
             {
               path: '/submit',
               name: "SubmitSnippet",
-              component: SubmitSnippet,
+              component: () => import('@/components/SubmitSnippet'),
               props: true
             }
           ]
@@ -59,20 +50,20 @@ export default new Router({
         {
           path: '/profile',
           name: 'Profile',
-          component: Profile,
+          component: () => import('@/components/Profile/Profile'),
           beforeEnter: Auth, 
           children:[
             {
               path:'/change/password',
               name: "ChangePassword",
-              component: ChangePassword
+              component: () => import('@/components/Profile/ChangePassword/ChangePassword')
             }
           ]
         },
         {
           path: '/:hash',
           name: 'HashSnippet',
-          component: Snippet,
+          component: () => import('@/components/Snippet'),
           props: true
         } 
       ]
