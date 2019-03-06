@@ -14,8 +14,36 @@
 
 .submit-panel
 {
-  width: 550px;
-  height: 300px;
+  padding: 10px;
+  max-width: 90%;
+  min-width: 60%;
+  min-height: 300px;
   background: white;
   border-radius: 15px;
+}
+
+input
+{
+  border-radius: 15px;
+  height: 20px;
+  padding: 10px;
+  outline: none;
+  border: 1px solid gray;
+  margin: 5px;
+}
+
+button{
+  border-radius: 8px;
+  outline: none;
+  border: none;
+  background: #2980B9;
+  color: white;
+  padding: 15px;
+  margin: 5px;
+  height: 50px;
+  &:hover
+  {
+    cursor: pointer;
+    background: #2B93D8;
+  }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="password-background" v-on:click.self="handleClose()">
+  <div class="password-background" @click.self="handleClose()">
     <div class="password-panel">
       <h1>Changing Password</h1>
       <p>You're about to change your password</p>

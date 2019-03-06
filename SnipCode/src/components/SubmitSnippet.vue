@@ -1,8 +1,8 @@
 <template>
-  <div class="submit-background">
+  <div @click.self="handleClose()" class="submit-background">
     <div class="submit-panel">
       <h1>Before we continue...</h1>
-      <p>Please give a name to your Snippet. It will be easier to identify it </p>
+      <p>Please name your Snippet so it will be easier to identify it. </p>
       <form>
         <label>Snippet's name</label>
         <input v-model="name" name="name" type="text" placeholder="Unnamed Snippet"/>
@@ -30,6 +30,10 @@ export default {
        {
          this.$router.push(result.data.hash);
        });
+    },
+    handleClose()
+    {
+      this.$router.go(-1);
     }
   }
 }
