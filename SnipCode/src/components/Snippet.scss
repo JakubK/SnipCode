@@ -27,10 +27,13 @@ span
 textarea
 {
   width: calc(100% - 2px);
+  height: calc(100vh - 160px);
+
+  outline: none;
+  border: none;
   resize: none;
   padding: 0;
 
-  height: calc(100vh - 166px);
 }
 
 .btn-share

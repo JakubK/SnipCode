@@ -10,7 +10,7 @@
         Save snippet
       </button>
     </div>
-    <textarea :readonly="readonly" v-model="snippet.content"></textarea>
+    <textarea @keydown.tab.prevent="(e) => tabber(e)" v-model="snippet.content"></textarea>
   </main>
 </template>
 <script>
@@ -25,6 +25,17 @@ export default {
   },
   methods:
   {
+    tabber(event)
+    {
+       let text = this.snippet.content,
+        originalSelectionStart = event.target.selectionStart,
+        textStart = text.slice(0, originalSelectionStart),
+        textEnd =  text.slice(originalSelectionStart);
+
+      this.snippet.content = `${textStart}\t${textEnd}`
+      event.target.value = this.snippet.content 
+      event.target.selectionEnd = event.target.selectionStart = originalSelectionStart + 1
+    },
     shareSnippet()
     {
       if(this.hash)
