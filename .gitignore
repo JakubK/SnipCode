@@ -337,3 +337,4 @@ ASALocalRun/
 /.vscode
 SnipCodeAPI/database.db
 SnipCodeAPI/hangfire.db
+SnipCodeAPI/appsettings.json
