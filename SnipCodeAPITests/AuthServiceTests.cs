@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using NSubstitute;
 using NUnit.Framework;
 using SnipCodeAPI.Models;
+using SnipCodeAPI.Models.Requests;
 using SnipCodeAPI.Repositories.Interfaces;
 using SnipCodeAPI.Services;
 using SnipCodeAPI.Services.Interfaces;
@@ -59,6 +60,56 @@ namespace SnipCodeAPITests
       JsonWebToken result = authService.Authenticate(model);
 
       Assert.IsTrue(result != null);
+    }
+
+    [Test]
+    public void TryChangePassword_WhenValidCredentialsGiven_ReturnsTrue()
+    {
+      IUserRepository userRepositoryMock = Substitute.For<IUserRepository>();
+      userRepositoryMock.GetUsers().Returns(new List<User>()
+      {
+        new User(){
+          Email = "GoodEmail",
+          Password = "GoodPassword"
+        }
+      });
+
+      IPasswordHasher<User> passwordHasherMock = Substitute.For<IPasswordHasher<User>>();
+      IJWTService jwtServiceMock = Substitute.For<IJWTService>();
+
+      AuthService authService = new AuthService(userRepositoryMock,passwordHasherMock,jwtServiceMock);
+
+      ChangePasswordRequest model = new ChangePasswordRequest{
+        OldPassword = "GoodPassword",
+        NewPassword = "SomePassword",
+      };
+
+      Assert.IsTrue(authService.TryChangePassword("GoodEmail",model));
+    }
+
+    [Test]
+    public void TryChangePassword_WhenInvalidCredentialsGiven_ReturnsFalse()
+    {
+      IUserRepository userRepositoryMock = Substitute.For<IUserRepository>();
+      userRepositoryMock.GetUsers().Returns(new List<User>()
+      {
+        new User(){
+          Email = "GoodEmail",
+          Password = "GoodPassword"
+        }
+      });
+
+      IPasswordHasher<User> passwordHasherMock = Substitute.For<IPasswordHasher<User>>();
+      IJWTService jwtServiceMock = Substitute.For<IJWTService>();
+
+      AuthService authService = new AuthService(userRepositoryMock,passwordHasherMock,jwtServiceMock);
+
+      ChangePasswordRequest model = new ChangePasswordRequest{
+        OldPassword = "BadPassword",
+        NewPassword = "SomePassword",
+      };
+
+      Assert.IsFalse(authService.TryChangePassword("BadEmail",model));
     }
   }
 }
