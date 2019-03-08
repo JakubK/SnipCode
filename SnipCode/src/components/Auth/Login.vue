@@ -5,6 +5,7 @@
     <form class="login-form">
       <input v-model="email" type="text" placeholder="Email Address"/>
       <input v-model="password" type="password" placeholder="Password"/>
+      <p class="error-text" v-show="errorText">{{ errorText }}</p>
       <button @click="TryToLogin">Sign in</button>
     </form>
   </div>
@@ -16,18 +17,30 @@ export default {
   data(){
     return{
       email: '',
-      password: ''
+      password: '',
+      errorText: ''
     }
   },
   methods:
   {
-    TryToLogin(e)
+    async TryToLogin(e)
     {
       e.preventDefault();
-      this.$store.dispatch("loginWithCredentials", {email: this.email, password: this.password}).then(() => {
-        //token acquired
-        this.$router.push("/profile");
-      })
+      if(this.email && this.password)
+      {
+        try
+        {
+          const response = await this.$store.dispatch("loginWithCredentials", {email: this.email, password: this.password});
+          this.$router.push("/profile");
+        }
+        catch(error){
+          this.errorText = "Bad credentials were given";
+        }
+      }
+      else
+      {
+        this.errorText = "Please fill every field";
+      }
     }
   }
 }

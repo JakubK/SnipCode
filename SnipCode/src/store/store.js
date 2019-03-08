@@ -158,10 +158,7 @@ export default new Vuex.Store({
         {
           localStorage.setItem('email', credentials.email);
            commit("updateAuthToken", response.data);
-        }).catch((error) => 
-        {
-          console.log("bad credentials");
-        });
+        })
     },
     createAccount: async({commit}, credentials) =>
     {

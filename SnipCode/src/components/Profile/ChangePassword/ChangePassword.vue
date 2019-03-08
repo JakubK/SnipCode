@@ -13,6 +13,7 @@
         <label>Repeat new Password</label>
         <input v-model="newPasswordRepeat"  type="password"/>
         <br/>
+        <p class="error-text" v-show="errorText">{{ errorText }}</p>
         <button @click="handleSubmit" type="button">Change password</button>
       </form>
     </div>
@@ -26,19 +27,30 @@ export default {
     return{
       oldPassword: '',
       newPassword: '',
-      newPasswordRepeat: ''
+      newPasswordRepeat: '',
+
+      errorText: ''
     }
   },
   methods:
   {
     handleSubmit()
     {
-       if(this.newPassword === this.newPasswordRepeat)
+       
+       if(this.newPassword === this.newPasswordRepeat && this.oldPassword)
        {
         this.$store.dispatch("changePassword",{oldPassword: this.oldPassword,newPassword: this.newPassword}).then(result =>
         {
           this.$router.go(-1)
         });
+       }
+       else if(this.newPassword !== this.newPasswordRepeat)
+       {
+         this.errorText = "Passwords don't match";
+       }
+       else
+       {
+         this.errorText = "Please fill every field";
        }
     },
     handleClose()

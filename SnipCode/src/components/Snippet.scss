@@ -49,6 +49,11 @@ textarea
     height: 10px;;
     display: inline-block;
   }
+
+  &:hover
+  {
+    cursor: pointer;
+  }
 }
 
 @media only screen and (max-width: 430px) {

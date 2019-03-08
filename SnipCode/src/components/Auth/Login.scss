@@ -37,6 +37,11 @@ button{
   }
 }
 
+.error-text
+{
+  color: red;
+}
+
 @media only screen and (max-width: 300px) {
   .login-form *{
     margin: 0;
