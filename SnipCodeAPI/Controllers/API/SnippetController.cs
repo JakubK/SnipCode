@@ -168,9 +168,13 @@ namespace SnipCodeAPI.Controllers.API
             var handler = new JwtSecurityTokenHandler();
             var token = handler.ReadJwtToken(tokenString) as JwtSecurityToken;
             var email = token.Claims.First(claim => claim.Type == ClaimTypes.Email).Value;
-            if(_snippetService.GetSnippetByHash(shareSnippetRequest.Hash).CreatorEmail == email)
+            if(_snippetService.GetSnippetByHash(shareSnippetRequest.Hash).CreatorEmail == email) //check if email of creator is equal to email of sender
             {
                 User user = _userRepository.GetUserByEmail(shareSnippetRequest.UserEmail);
+                if(user == default(User))
+                {
+                    return NotFound();
+                }
                 if(!user.SharedSnippets.Any(x => x.Hash == shareSnippetRequest.Hash))
                 {
                     user.SharedSnippets.Add(_snippetService.GetSnippetByHash(shareSnippetRequest.Hash));

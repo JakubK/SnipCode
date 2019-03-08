@@ -20,7 +20,7 @@ namespace SnipCodeAPI.Repositories
         #endregion
         #region Snippet
         public List<Snippet> GetAllSnippets() => _liteRepository.Query<Snippet>().ToList();
-        public Snippet GetSnippetByHash(string hash) => _liteRepository.Query<Snippet>().Where(x => x.Hash == hash).SingleOrDefault();
+        public Snippet GetSnippetByHash(string hash) => _liteRepository.Query<Snippet>().Where(x => x.Hash == hash).FirstOrDefault();
         public void RemoveSnippet(int id) => _liteRepository.Delete<Snippet>(x => x.Id == id);
         public void InsertSnippet(Snippet snippet) => _liteRepository.Insert<Snippet>(snippet);
         public bool UpdateSnippet(Snippet snippet) => _liteRepository.Update<Snippet>(snippet);
